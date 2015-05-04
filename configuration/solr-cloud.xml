@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>solr.cloud.zk.directory</name>
+    <value>/solr</value>
+    <description>Zookeeper directory
+    </description>
+  </property>
+  
+  <property>
+    <name>solr.cloud.shards</name>
+    <value>2</value>
+    <description>Number of shards
+    </description>
+  </property>
+  
+  <property>
+    <name>solr.cloud.replicas</name>
+    <value>1</value>
+    <description>Number of replicas
+    </description>
+  </property>
+</configuration>

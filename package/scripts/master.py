@@ -1,10 +1,18 @@
-import sys, os, pwd, signal, time
+
 from resource_management import *
 from subprocess import call
 from resource_management.core.logger import Logger
 
 class Master(Script):
+    
+  def parse_template(self):
+    import params
 
+    File(format("{solr_dir}/latest/bin/solr.in.sh"),
+         content=Template("solr.in.sh.j2"),
+         owner=params.solr_user
+    )
+    
   # Call setup.sh to install the service
   def install(self, env):
   
@@ -26,8 +34,11 @@ class Master(Script):
     cmd = params.stack_dir + '/package/scripts/setup.sh ' + params.solr_dir + ' ' + params.solr_downloadlocation + ' ' + params.solr_user + ' >> ' + params.stack_log
     
     Logger.info("Execute: " + cmd) 
-    
+        
     Execute(cmd)
+    
+    if params.enable_ssl:
+        self.parse_template()
 
 
   def configure(self, env):
@@ -39,6 +50,15 @@ class Master(Script):
     cmd = params.stack_dir + '/package/scripts/check_zk_status.sh ' + params.zookeeper_directory + " " + params.zk_config_dir + " " + params.solr_user + " " + params.zk_cli_shell + " " + params.zk_node1 + " " + params.zk_client_port + " " + params.stack_log
     
     Logger.info("Execute: " + cmd) 
+    
+    Execute(cmd)
+        
+  def enable_ssl(self):
+    import params
+    
+    cmd = params.stack_dir + '/package/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory
+
+    Logger.info("Execute: " + cmd)
     
     Execute(cmd)
 
@@ -54,14 +74,15 @@ class Master(Script):
     # Ensure the shell scripts in the services dir are executable 
     Execute('find ' + params.stack_dir + ' -iname "*.sh" | xargs chmod +x')
     
-    # form command to invoke start.sh with its arguments and execute it
     if params.solr_cloudmode:
-      self.check_zookeeper_status()
-      cmd = params.stack_dir + '/package/scripts/start_cloud.sh ' + params.solr_dir + ' ' + params.stack_log + ' ' + status_params.stack_pidfile + ' ' + params.zookeeper_hosts + ' ' + params.zookeeper_directory + ' ' + params.solr_port 
-    else:
-      cmd = params.stack_dir + '/package/scripts/start.sh ' + params.solr_dir + ' ' + params.stack_log + ' ' + status_params.stack_pidfile + ' ' + params.solr_port 
+        self.check_zookeeper_status()
+        
+    if params.enable_ssl:
+        self.enable_ssl()
+    
+    # form command to invoke start.sh with its arguments and execute it
+    cmd = params.stack_dir + '/package/scripts/start.sh ' + params.solr_dir + ' ' + params.stack_log + ' ' + status_params.stack_pidfile + ' ' + params.zookeeper_hosts + ' ' + params.zookeeper_directory + ' ' + params.solr_port + ' ' + str(params.solr_cloudmode) 
 
-      
     Logger.info("Execute: " + cmd)
     
     Execute(cmd)

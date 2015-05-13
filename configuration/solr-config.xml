@@ -68,5 +68,11 @@
     <value>basic_configs</value>
     <description>Solr config directory</description>
   </property>
+  
+  <property>
+    <name>solr.enable.ssl</name>
+    <value>false</value>
+    <description>Enable SSL support</description>
+  </property>
 </configuration>
 

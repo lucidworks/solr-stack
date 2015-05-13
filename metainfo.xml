@@ -17,11 +17,6 @@
       <!-- Version of component -->
       <version>0.0.1</version>
 
-      <!-- Any required services -->
-      <requiredServices>
-        <service>ZOOKEEPER</service>
-      </requiredServices>
-
       <components>
         <!-- In this case, there is only one master component -->
         <component>
@@ -31,6 +26,16 @@
           <!-- how many of these components are allowed in a cluster e.g. 
             1 or 1+ -->
           <cardinality>1+</cardinality>
+          <versionAdvertised>true</versionAdvertised>
+          <dependencies>
+            <dependency>
+              <name>ZOOKEEPER/ZOOKEEPER_SERVER</name>
+              <scope>cluster</scope>
+              <auto-deploy>
+                <enabled>true</enabled>
+              </auto-deploy>
+            </dependency>
+          </dependencies>
           <!-- reference to and details of what script is to be used to install/stop/start/config 
             the service -->
           <commandScript>
@@ -62,10 +67,15 @@
         <timeout>300</timeout>
       </commandScript>
 
+      <requiredServices>
+        <service>ZOOKEEPER</service>
+      </requiredServices>
+
       <!-- names for config files (under configuration dir) -->
       <configuration-dependencies>
         <config-type>solr-config</config-type>
         <config-type>solr-cloud</config-type>
+        <config-type>solr-ssl</config-type>
       </configuration-dependencies>
       <restartRequiredAfterChange>false</restartRequiredAfterChange>
     </service>

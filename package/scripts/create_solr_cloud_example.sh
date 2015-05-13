@@ -1,18 +1,18 @@
 #!/bin/bash
 
-solr_path=$1
-collection_name=$2
-config_directory=$3
-solr_port=$4
-shards=$5
-replication=$6
-log_file=$7
+SOLR_PATH=$1
+COLLECTION_NAME=$2
+CONFIG_DIRECTORY=$3
+SOLR_PORT=$4
+SHARDS=$5
+REPLICATION=$6
+LOG_FILE=$7
 
 function create_solr_cloud_example() {
-	cd $solr_path/latest/bin
-	output=$(./solr create_collection -c $collection_name -d $config_directory -p $solr_port -s $shards -rf $replication)
-	echo $output
-	echo $output >> $log_file
+    cd $SOLR_PATH/latest/bin
+    OUTPUT=$(./solr create_collection -c $COLLECTION_NAME -d $CONFIG_DIRECTORY -p $SOLR_PORT -s $SHARDS -rf $REPLICATION)
+    echo $OUTPUT
+    echo $OUTPUT >> $LOG_FILE
 }
 
 create_solr_cloud_example

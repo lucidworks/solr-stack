@@ -1,64 +1,87 @@
 #!/bin/bash
 
 #Path to start.jar e.g. /opt/solr
-solr_path=$1
+SOLR_PATH=$1
 
-#log_file e.g. /var/log/solr.log
-log_file=$2
+#LOG_FILE e.g. /var/log/solr.log
+LOG_FILE=$2
 
-#pid file e.g. /var/run/solr.pid
-pid_file=$3
+#PID file e.g. /var/run/solr.PID
+PID_FILE=$3
 
-#solr port
-solr_port=$4
+#zookeeper hosts
+ZK_HOSTS=$4
+
+ZK_DIRECTORY=$5
+
+SOLR_PORT=$6
+
+SOLR_CLOUD=$7
  
-pid_dir=$(dirname "$pid_file")
+PID_DIR=$(dirname "$PID_FILE")
 
 function validate_pid_dir() {
-	if [ ! -d "$pid_dir" ]; then
-		echo "Creating pid_dir: $pid_dir"
-		mkdir -p $pid_dir
-	fi
-}
-
-function validate_solr_status() {
-	if [ -f "$pid_file" ]; then
-		output=$(./solr status)
-		echo $output | grep "No Solr nodes are running."
-		
-		if [ "$?" -eq 1 ]; then
-			error_msg="Solr is running, it cannot be started again"
-			echo $error_msg
-			echo $error_msg >> $log_file
-			exit 1
-        fi
-	fi
-}
-
-function validate_solr_port() {
-	output=$(netstat -lnt | awk -v v1=$solr_port '$6 == "LISTEN" && $4 ~ ":"+v1')
-	echo $output | grep "LISTEN"
-	
-	if [ "$?" -eq 0 ]; then
-		error_msg="The port $solr_port is not available"
-		echo $error_msg
-		echo $error_msg >> $log_file
-		exit 1
+    if [ ! -d "$PID_DIR" ]; then
+        echo "Creating PID_DIR: $PID_DIR"
+        mkdir -p $PID_DIR
     fi
 }
 
-function start_solr() {
-	echo "Starting Solr..." >> $log_file
-	output=`./solr start -p $solr_port`
-	echo $output >> $log_file
-	pid=`echo $output | sed -e 's/.*pid=\(.*\)).*/\1/'`
-	echo $pid > $pid_file
+function validate_node_status() {
+    if [ -f "$PID_FILE" ]; then
+        OUTPUT=$(./solr status)
+        echo $OUTPUT | grep "No Solr nodes are running."
+        
+        if [ "$?" -eq 1 ]; then
+            ERROR_MSG="Solr is running, it cannot be started again"
+            echo $ERROR_MSG
+            echo $ERROR_MSG >> $LOG_FILE
+            exit 1
+        fi
+    fi
+}
+
+function validate_solr_port() {
+    OUTPUT=$(netstat -lnt | awk -v v1=$SOLR_PORT '$6 == "LISTEN" && $4 ~ ":"+v1')
+    echo $OUTPUT | grep "LISTEN"
+    
+    if [ "$?" -eq 0 ]; then
+        ERROR_MSG="The port $SOLR_PORT is not available"
+        echo $ERROR_MSG
+        echo $ERROR_MSG >> $LOG_FILE
+        exit 1
+    fi
+}
+
+function start_standalone() {
+    echo "Starting Solr..." >> $LOG_FILE
+    OUTPUT=`./solr start -p $SOLR_PORT`
+    echo $OUTPUT >> $LOG_FILE
+    PID=`echo $OUTPUT | sed -e 's/.*PID=\(.*\)).*/\1/'`
+    echo $PID > $PID_FILE
+}
+
+function start_solr_cloud(){
+    echo "Starting Solr Cloud..." >> $LOG_FILE
+    echo "Zookeeper ensemble $ZK_HOSTS$ZK_DIRECTORY" >> $LOG_FILE
+    OUTPUT=`./solr start -cloud -z $ZK_HOSTS$ZK_DIRECTORY -p $SOLR_PORT`
+    echo $OUTPUT >> $LOG_FILE	
+    PID=`echo $OUTPUT | sed -e 's/.*pid=\(.*\)).*/\1/'`
+    echo $PID > $PID_FILE
+}
+
+function start_solr(){
+    if (($SOLR_CLOUD == "True")); then
+        start_solr_cloud
+    else
+        start_standalone
+    fi
 }
 
 validate_pid_dir
 
-cd $solr_path/latest/bin
+cd $SOLR_PATH/latest/bin
 
-validate_solr_status
+validate_node_status
 validate_solr_port
 start_solr

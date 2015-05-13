@@ -30,3 +30,12 @@ zk_config_dir = "/etc/zookeeper/conf"
 zk_cli_shell = format("/usr/hdp/current/zookeeper-server/bin/zkCli.sh")
 zk_node1 = config['clusterHostInfo']['zookeeper_hosts'][0];
 zk_client_port = str(default('/configurations/zoo.cfg/clientPort', None))
+
+# solr ssl
+enable_ssl = config['configurations']['solr-config']['solr.enable.ssl']
+solr_ssl_key_store = config['configurations']['solr-ssl']['solr.ssl.key.store']
+solr_ssl_key_store_password = config['configurations']['solr-ssl']['solr.ssl.key.store.password']
+solr_ssl_trust_store = config['configurations']['solr-ssl']['solr.ssl.trust.store']
+solr_ssl_trust_store_password = config['configurations']['solr-ssl']['solr.ssl.trust.store.password']
+solr_ssl_need_client_auth = config['configurations']['solr-ssl']['solr.ssl.need.client.auth']
+solr_ssl_want_client_auth = config['configurations']['solr-ssl']['solr.ssl.want.client.auth']

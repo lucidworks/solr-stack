@@ -1,27 +1,27 @@
 #!/bin/bash
 
-solr_path=$1
-pid_file=$2
-solr_port=$3
-log_file=$4
-error_msg="Error: Solr is not running."
+SOLR_PATH=$1
+PID_FILE=$2
+SOLR_PORT=$3
+LOG_FILE=$4
+ERROR_MSG="Error: Solr is not running."
 
 function validate_solr_status() {
-	if [ -f "$pid_file" ]; then
-		pid=$(cat $pid_file)
-		cd $solr_path/latest/bin
-		output=$(./solr status)
-		echo $output | grep "Solr process $pid running on port $solr_port"
-		
-		if [ "$?" -eq 1 ]; then
-			echo $error_msg
-			echo $error_msg >> $log_file
-			exit 1
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat $PID_FILE)
+        cd $SOLR_PATH/latest/bin
+        OUTPUT=$(./solr status)
+        echo $OUTPUT | grep "Solr process $PID running on port $SOLR_PORT"
+        
+        if [ "$?" -eq 1 ]; then
+            echo $ERROR_MSG
+            echo $ERROR_MSG >> $LOG_FILE
+            exit 1
         fi
-	else
-		echo $error_msg
-		echo $error_msg >> $log_file
-	fi
+    else
+        echo $ERROR_MSG
+        echo $ERROR_MSG >> $LOG_FILE
+    fi
 }
 
 validate_solr_status

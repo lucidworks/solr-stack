@@ -12,6 +12,7 @@
   <property>
     <name>solr.ssl.key.store.password</name>
     <value>secret</value>
+    <property-type>PASSWORD</property-type>
     <description>SSL key store password
     </description>
   </property>
@@ -26,6 +27,7 @@
   <property>
     <name>solr.ssl.trust.store.password</name>
     <value>secret</value>
+    <property-type>PASSWORD</property-type>
     <description>SSL trust store password
     </description>
   </property>

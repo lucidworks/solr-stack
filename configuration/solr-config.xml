@@ -7,13 +7,6 @@
     name, default value and description (shown as help text) -->
 
   <property>
-    <name>solr.cloudmode</name>
-    <value>true</value>
-    <description>Whether Solr should be started in Cloud mode
-    </description>
-  </property>
-
-  <property>
     <name>solr.dir</name>
     <value>/opt/solr</value>
     <description>Path to Solr root</description>
@@ -23,18 +16,6 @@
     <name>solr.log</name>
     <value>/var/log/solr.log</value>
     <description>Log file for Solr service</description>
-  </property>
-
-  <!-- Location that will contain solr stack service related files on all 
-    nodes. setup.sh/install.sh will be invoked from here -->
-  <property>
-    <name>solr.stack.dir</name>
-    <!-- this is a distributed cache dir that will contain service related 
-      files on all nodes -->
-    <value>/var/lib/ambari-agent/cache/stacks/HDP/2.2/services/solr-stack
-    </value>
-    <description>Stack dir from where to run setup/start/stop scripts
-    </description>
   </property>
 
   <property>
@@ -55,24 +36,6 @@
     <name>solr.port</name>
     <value>8983</value>
     <description>Solr port</description>
-  </property>
-
-  <property>
-    <name>solr.example</name>
-    <value>collection1</value>
-    <description>Example collection</description>
-  </property>
-
-  <property>
-    <name>solr.config.directory</name>
-    <value>basic_configs</value>
-    <description>Solr config directory</description>
-  </property>
-  
-  <property>
-    <name>solr.enable.ssl</name>
-    <value>false</value>
-    <description>Enable SSL support</description>
   </property>
 </configuration>
 

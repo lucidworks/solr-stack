@@ -3,6 +3,13 @@
 
 <configuration>
   <property>
+    <name>solr.cloudmode</name>
+    <value>true</value>
+    <description>Whether Solr should be started in Cloud mode
+    </description>
+  </property>
+
+  <property>
     <name>solr.cloud.zk.directory</name>
     <value>/solr</value>
     <description>Zookeeper directory

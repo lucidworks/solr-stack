@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>create.example.collection</name>
+    <value>true</value>
+    <description>Create an example collection
+    </description>
+  </property>
+  
+  <property>
+    <name>solr.example</name>
+    <value>collection1</value>
+    <description>Example collection</description>
+  </property>
+
+  <property>
+    <name>solr.config.directory</name>
+    <value>basic_configs</value>
+    <description>Solr config directory</description>
+  </property>
+</configuration>

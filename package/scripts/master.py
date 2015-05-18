@@ -1,4 +1,3 @@
-
 from resource_management import *
 from subprocess import call
 from resource_management.core.logger import Logger
@@ -31,7 +30,10 @@ class Master(Script):
     Execute(find_cmd)
         
     # form command to invoke setup.sh with its arguments and execute it
-    cmd = params.stack_dir + '/package/scripts/setup.sh ' + params.solr_dir + ' ' + params.solr_downloadlocation + ' ' + params.solr_user + ' >> ' + params.stack_log
+    if params.os_type == "ubuntu":
+        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name_ubuntu + ' ' + params.solr_deb_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' >> ' + params.stack_log
+    else:
+        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name + ' ' + params.solr_rpm_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' >> ' + params.stack_log
     
     Logger.info("Execute: " + cmd) 
         
@@ -47,16 +49,54 @@ class Master(Script):
     
   def check_zookeeper_status(self):
     import params
-    cmd = params.stack_dir + '/package/scripts/check_zk_status.sh ' + params.zookeeper_directory + " " + params.zk_config_dir + " " + params.solr_user + " " + params.zk_cli_shell + " " + params.zk_node1 + " " + params.zk_client_port + " " + params.stack_log
+    cmd = params.stack_dir + '/scripts/check_zk_status.sh ' + params.zookeeper_directory + " " + params.zk_config_dir + " " + params.solr_user + " " + params.zk_cli_shell + " " + params.zk_node1 + " " + params.zk_client_port + " >> " + params.stack_log
     
     Logger.info("Execute: " + cmd) 
     
     Execute(cmd)
+    
+  def add_support_hdfs(self):
+    import params
+    
+    hdfs_dir = params.hdfs_dir
+    hadoop_bin_dir = params.hadoop_bin_dir
+    hadoop_conf_dir = params.hadoop_conf_dir
+            
+    safemode_command = "dfsadmin -safemode get | grep OFF"
+    create_dir_cmd = format("fs -mkdir {hdfs_dir}")
+    chmod_command = format("fs -chmod 777 {hdfs_dir}")
+    test_dir_exists = as_user(format("{hadoop_bin_dir}/hadoop --config {hadoop_conf_dir} fs -test -e {hdfs_dir}"), params.hdfs_user)
+            
+    ExecuteHadoop(safemode_command,
+                  user=params.hdfs_user,
+                  logoutput=True,
+                  conf_dir=params.hadoop_conf_dir,
+                  try_sleep=3,
+                  tries=20,
+                  bin_dir=params.hadoop_bin_dir
+                  )
+    ExecuteHadoop(create_dir_cmd,
+                  user=params.hdfs_user,
+                  logoutput=True,
+                  not_if=test_dir_exists,
+                  conf_dir=params.hadoop_conf_dir,
+                  try_sleep=3,
+                  tries=5,
+                  bin_dir=params.hadoop_bin_dir
+                  )
+    ExecuteHadoop(chmod_command,
+                  user=params.hdfs_user,
+                  logoutput=True,
+                  conf_dir=params.hadoop_conf_dir,
+                  try_sleep=3,
+                  tries=5,
+                  bin_dir=params.hadoop_bin_dir
+                  )
         
   def enable_ssl(self):
     import params
     
-    cmd = params.stack_dir + '/package/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory
+    cmd = params.stack_dir + '/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory+ " >> " + params.stack_log
 
     Logger.info("Execute: " + cmd)
     
@@ -79,9 +119,11 @@ class Master(Script):
         
     if params.enable_ssl:
         self.enable_ssl()
+        
+    self.add_support_hdfs()
     
     # form command to invoke start.sh with its arguments and execute it
-    cmd = params.stack_dir + '/package/scripts/start.sh ' + params.solr_dir + ' ' + params.stack_log + ' ' + status_params.stack_pidfile + ' ' + params.zookeeper_hosts + ' ' + params.zookeeper_directory + ' ' + params.solr_port + ' ' + str(params.solr_cloudmode) 
+    cmd = params.stack_dir + '/scripts/start.sh ' + params.solr_dir + ' ' + ' ' + status_params.stack_pidfile + ' ' + params.zookeeper_hosts + ' ' + params.zookeeper_directory + ' ' + params.solr_port + ' ' + str(params.solr_cloudmode) + ' ' + params.fs_default_name + ' ' + params.hdfs_dir + ' >> ' + params.stack_log 
 
     Logger.info("Execute: " + cmd)
     
@@ -95,7 +137,7 @@ class Master(Script):
     
     import status_params
     
-    cmd = params.stack_dir + '/package/scripts/stop.sh ' + params.solr_dir + ' ' + params.solr_port + ' ' + params.stack_log + ' ' + status_params.stack_pidfile
+    cmd = params.stack_dir + '/scripts/stop.sh ' + params.solr_dir + ' ' + params.solr_port + ' ' + status_params.stack_pidfile + ' >> ' + params.stack_log
     
     Logger.info("Execute: " + cmd) 
     

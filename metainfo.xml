@@ -68,6 +68,7 @@
       </commandScript>
 
       <requiredServices>
+        <service>HDFS</service>
         <service>ZOOKEEPER</service>
       </requiredServices>
 

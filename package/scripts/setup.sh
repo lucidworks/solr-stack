@@ -15,14 +15,14 @@ function setup_deb() {
         echo $OUTPUT
         OUTPUT=$(dpkg -i $PACKAGE_LOCATION$PACKAGE_FILE)
         echo $OUTPUT
-        OUTPUT=$(apt-get install -f)
+        OUTPUT=$(apt-get install -f -y)
         echo $OUTPUT
 
         #double check
         OUTPUT=$(dpkg-query -W --showformat='${Status}\n' $PACKAGE_NAME | grep "install ok installed")
         if [ "$?" -eq 1 ]; then
             echo $OUTPUT
-            OUTPUT=$(apt-get install -f)
+            OUTPUT=$(apt-get install -f -y)
             echo $OUTPUT
         else
             echo "Package $PACKAGE_NAME successfully installed"

@@ -43,9 +43,11 @@ class ServiceCheck(Script):
         import params
 
         self.check_solr_status()
-        self.create_example()
         
-        if params.solr_cloudmode:
+        if params.solr_collection_sample_create:
+            self.create_example()
+        
+        if params.solr_collection_sample_create and params.solr_cloudmode:
             self.check_bootstrap()
 
 if __name__ == "__main__":

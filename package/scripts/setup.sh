@@ -8,28 +8,18 @@ PACKAGE_LOCATION=$3
 
 OS_TYPE=$4
 
+SOLR_LOG=$5
+
 function setup_deb() {
-    OUTPUT=$(dpkg-query -W --showformat='${Status}\n' $PACKAGE_NAME | grep "install ok installed")
+    OUTPUT=$(dpkg-query -W --showformat='${Status}\n' $PACKAGE_NAME | grep "install ok")
 
     if [ "$?" -eq 1 ]; then
-        echo $OUTPUT
+        echo $OUTPUT >> $SOLR_LOG
         OUTPUT=$(dpkg -i $PACKAGE_LOCATION$PACKAGE_FILE)
-        echo $OUTPUT
-        OUTPUT=$(apt-get install -f -y)
-        echo $OUTPUT
-
-        #double check
-        OUTPUT=$(dpkg-query -W --showformat='${Status}\n' $PACKAGE_NAME | grep "install ok installed")
-        if [ "$?" -eq 1 ]; then
-            echo $OUTPUT
-            OUTPUT=$(apt-get install -f -y)
-            echo $OUTPUT
-        else
-            echo "Package $PACKAGE_NAME successfully installed"
-        fi
+        echo $OUTPUT >> $SOLR_LOG
     else
-        echo $OUTPUT
-        echo "Package $PACKAGE_NAME already installed, skipping install..."     
+        echo $OUTPUT >> $SOLR_LOG
+        echo "Package $PACKAGE_NAME already installed, skipping install..." >> $SOLR_LOG
     fi
 }
 
@@ -37,14 +27,22 @@ function setup_rpm() {
     OUTPUT=$(rpm -q $PACKAGE_NAME)
     echo $OUTPUT | grep "is not installed"
     if [ "$?" -eq 1 ]; then
-        echo "Package $PACKAGE_NAME already installed, skipping install..."
+        echo $OUTPUT >> $SOLR_LOG
+        echo "Package $PACKAGE_NAME already installed, skipping install..." >> $SOLR_LOG
     else
+        echo $OUTPUT >> $SOLR_LOG
         OUTPUT=$(rpm -Uvh $PACKAGE_LOCATION$PACKAGE_FILE)
-        echo $OUTPUT
+        echo $OUTPUT >> $SOLR_LOG
     fi
 }
 
 function setup_solr() {
+    SOLR_LOG_DIR=$(dirname "$SOLR_LOG")
+    
+    if [ ! -d "$SOLR_LOG_DIR" ]; then
+        mkdir -p $SOLR_LOG_DIR
+    fi
+    
     if [ "$OS_TYPE" == "ubuntu" ]; then
         setup_deb
     else

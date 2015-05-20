@@ -3,7 +3,7 @@
 
 <configuration>
   <property>
-    <name>solr.enable.ssl</name>
+    <name>solr.ssl.enable</name>
     <value>false</value>
     <description>Enable SSL support</description>
   </property>

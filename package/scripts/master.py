@@ -31,9 +31,9 @@ class Master(Script):
         
     # form command to invoke setup.sh with its arguments and execute it
     if params.os_type == "ubuntu":
-        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name_ubuntu + ' ' + params.solr_deb_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' >> ' + params.stack_log
+        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name + ' ' + params.solr_deb_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' ' + params.stack_log
     else:
-        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name + ' ' + params.solr_rpm_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' >> ' + params.stack_log
+        cmd = params.stack_dir + '/scripts/setup.sh ' + params.solr_package_name + ' ' + params.solr_rpm_file + ' ' + params.solr_installer_folder_location + ' ' + params.os_type + ' ' + params.stack_log
     
     Logger.info("Execute: " + cmd) 
         
@@ -96,7 +96,7 @@ class Master(Script):
   def enable_ssl(self):
     import params
     
-    cmd = params.stack_dir + '/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory+ " >> " + params.stack_log
+    cmd = params.stack_dir + '/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory + " >> " + params.stack_log
 
     Logger.info("Execute: " + cmd)
     
@@ -120,11 +120,23 @@ class Master(Script):
     if params.enable_ssl:
         self.enable_ssl()
         
-    self.add_support_hdfs()
+    if params.solr_hdfs_enable:
+        self.add_support_hdfs()
+        
+    map_custom_properties = params.map_custom_properties
+    custom_length = len(params.map_custom_properties)
+    custom_command = ""
+    
+    if custom_length > 0:
+        for key in map_custom_properties:
+            value = map_custom_properties[key]
+            if key.startswith("-D"):
+                custom_command += str(key) + "=" + str(value) + " "
+            else:
+                custom_command += str(key) + " " + str(value) + " "
     
     # form command to invoke start.sh with its arguments and execute it
-    cmd = params.stack_dir + '/scripts/start.sh ' + params.solr_dir + ' ' + ' ' + status_params.stack_pidfile + ' ' + params.zookeeper_hosts + ' ' + params.zookeeper_directory + ' ' + params.solr_port + ' ' + str(params.solr_cloudmode) + ' ' + params.fs_default_name + ' ' + params.hdfs_dir + ' >> ' + params.stack_log 
-
+    cmd = params.stack_dir + "/scripts/start.sh " + params.solr_dir + " " + " " + status_params.stack_pidfile + " " + params.zookeeper_hosts + " " + params.zookeeper_directory + " " + params.solr_port + " " + str(params.solr_cloudmode) + " " + params.fs_default_name + " " + params.hdfs_dir + " " + params.solr_memory + " " + str(params.solr_hdfs_enable) + " '" + custom_command + "' " + params.stack_log + " >> " + params.stack_log
     Logger.info("Execute: " + cmd)
     
     Execute(cmd)

@@ -18,6 +18,14 @@ SOLR_CLOUD=$6
 HDFS_URL=$7
 
 HDFS_FOLDER=$8
+
+SOLR_MEMORY=$9
+
+ENABLE_HDFS=${10}
+
+CUSTOM_COMMAND=${11}
+
+SOLR_LOG=${12}
  
 PID_DIR=$(dirname "$PID_FILE")
 
@@ -54,28 +62,37 @@ function validate_solr_port() {
     fi
 }
 
-function start_standalone() {
-    echo "Starting Solr Standalone..."
-    OUTPUT=$(./solr start -p $SOLR_PORT -Dsolr.directoryFactory=HdfsDirectoryFactory -Dsolr.lock.type=hdfs -Dsolr.hdfs.home=$HDFS_URL$HDFS_FOLDER)
-    echo $OUTPUT
-    PID=$(cat solr-$SOLR_PORT.pid)
-    echo $PID > $PID_FILE
-}
-
-function start_solr_cloud(){
-    echo "Starting Solr Cloud..."
-    echo "Zookeeper ensemble $ZK_HOSTS$ZK_DIRECTORY"
-    OUTPUT=$(./solr start -cloud -z $ZK_HOSTS$ZK_DIRECTORY -p $SOLR_PORT -Dsolr.directoryFactory=HdfsDirectoryFactory -Dsolr.lock.type=hdfs -Dsolr.hdfs.home=$HDFS_URL$HDFS_FOLDER)
-    echo $OUTPUT
-    PID=$(cat solr-$SOLR_PORT.pid)
-    echo $PID > $PID_FILE
-}
-
 function start_solr(){
+            
+    CMD="$SOLR_PATH/bin/solr start"
+    
     if [ "$SOLR_CLOUD" == "True" ]; then
-        start_solr_cloud
+        echo "Starting Solr Cloud ..."
+        echo "Zookeeper ensemble $ZK_HOSTS$ZK_DIRECTORY"
+        CMD="$CMD -cloud -z $ZK_HOSTS$ZK_DIRECTORY"
     else
-        start_standalone
+        echo "Starting Solr Standalone ..."
+    fi
+        
+    if [ "$ENABLE_HDFS" == "True" ]; then
+        CMD="$CMD -Dsolr.directoryFactory=HdfsDirectoryFactory -Dsolr.lock.type=hdfs -Dsolr.hdfs.home=$HDFS_URL$HDFS_FOLDER"
+    fi
+        
+    CMD="$CMD -p $SOLR_PORT -m $SOLR_MEMORY $CUSTOM_COMMAND"
+    
+    echo $CMD
+    
+    OUTPUT=$($CMD)
+    echo $OUTPUT
+    PID=$(cat solr-$SOLR_PORT.pid)
+    echo $PID > $PID_FILE
+    
+    SOLR_LOG_DIR=$(dirname "$SOLR_LOG")
+    SOLR_LOGS=$SOLR_LOG_DIR/logs
+    
+    if [ ! -d "$SOLR_LOGS" ]; then
+        echo "Creating symbolic link of $SOLR_PATH/server/logs/ to $SOLR_LOGS"
+        ln -s $SOLR_PATH/server/logs/ $SOLR_LOGS
     fi
 }
 

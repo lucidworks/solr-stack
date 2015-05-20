@@ -3,21 +3,23 @@
 
 <configuration>
   <property>
-    <name>create.example.collection</name>
+    <name>solr.collection.sample.create</name>
     <value>true</value>
-    <description>Create an example collection
-    </description>
-  </property>
-  
-  <property>
-    <name>solr.example</name>
-    <value>collection1</value>
-    <description>Example collection</description>
+    <description>True to create a sample collection when Solr is
+      deployed</description>
   </property>
 
   <property>
-    <name>solr.config.directory</name>
+    <name>solr.collection.sample.name</name>
+    <value>collection1</value>
+    <description>Solr sample collection name. Mandatory</description>
+  </property>
+
+  <property>
+    <name>solr.collection.sample.config.directory</name>
     <value>basic_configs</value>
-    <description>Solr config directory</description>
+    <description>Solr sample collection configurations directory. Mandatory
+This directory path is relative to /opt/lucidworks-hadoop/solr/server/solr/configset.
+It must contain at least solrconfig.xml and schema.xml</description>
   </property>
 </configuration>

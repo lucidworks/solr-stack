@@ -3,7 +3,7 @@
 
 <configuration>
   <property>
-    <name>solr.cloudmode</name>
+    <name>solr.cloud.enable</name>
     <value>true</value>
     <description>Whether Solr should be started in Cloud mode
     </description>
@@ -12,21 +12,21 @@
   <property>
     <name>solr.cloud.zk.directory</name>
     <value>/solr</value>
-    <description>Zookeeper directory
+    <description>Zookeeper directory for the Solr shared files
     </description>
   </property>
 
   <property>
     <name>solr.cloud.shards</name>
     <value>2</value>
-    <description>Number of shards
+    <description>Number of Solr shards, for details refer to (https://cwiki.apache.org/confluence/display/solr/Shards+and+Indexing+Data+in+SolrCloud)
     </description>
   </property>
 
   <property>
     <name>solr.cloud.replicas</name>
     <value>1</value>
-    <description>Number of replicas
+    <description>Number of Solr replicas, for details refer to (https://cwiki.apache.org/confluence/display/solr/NRT%2C+Replication%2C+and+Disaster+Recovery+with+SolrCloud)
     </description>
   </property>
 </configuration>

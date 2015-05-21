@@ -19,7 +19,7 @@ function setup_deb() {
         echo $OUTPUT >> $SOLR_LOG
     else
         echo $OUTPUT >> $SOLR_LOG
-        echo "Package $PACKAGE_NAME already installed, skipping install..." >> $SOLR_LOG
+        echo "Package $PACKAGE_NAME is already installed, skipping install..." >> $SOLR_LOG
     fi
 }
 
@@ -28,7 +28,7 @@ function setup_rpm() {
     echo $OUTPUT | grep "is not installed"
     if [ "$?" -eq 1 ]; then
         echo $OUTPUT >> $SOLR_LOG
-        echo "Package $PACKAGE_NAME already installed, skipping install..." >> $SOLR_LOG
+        echo "Package $PACKAGE_NAME is already installed, skipping install..." >> $SOLR_LOG
     else
         echo $OUTPUT >> $SOLR_LOG
         OUTPUT=$(rpm -Uvh $PACKAGE_LOCATION$PACKAGE_FILE)

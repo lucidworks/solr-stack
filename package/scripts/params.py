@@ -34,6 +34,8 @@ map_example_collection = config['configurations']['example-collection'];
 solr_collection_name = map_example_collection['solr.collection.sample.name']
 solr_collection_sample_create = map_example_collection['solr.collection.sample.create']
 solr_config_dir = map_example_collection['solr.collection.sample.config.directory']
+solr_shards = str(map_example_collection['solr.collection.sample.shards'])
+solr_replicas = str(map_example_collection['solr.collection.sample.replicas'])
 
 for key in map_example_collection:
     value = map_example_collection[key]
@@ -44,22 +46,27 @@ for key in map_example_collection:
 map_solr_cloud = config['configurations']['solr-cloud'];
 zookeeper_directory = map_solr_cloud['solr.cloud.zk.directory']
 solr_cloudmode = map_solr_cloud['solr.cloud.enable']
-solr_shards = str(map_solr_cloud['solr.cloud.shards'])
-solr_replicas = str(map_solr_cloud['solr.cloud.replicas'])
 
 for key in map_solr_cloud:
     value = map_solr_cloud[key]
     if not key.startswith("solr.cloud"):
         map_custom_properties[key] = value;
         
-# get comma separated list of zookeeper hosts from clusterHostInfo
-zookeeper_hosts = ",".join(config['clusterHostInfo']['zookeeper_hosts'])
-
 # zookeeper
 zk_config_dir = "/etc/zookeeper/conf"
 zk_cli_shell = format("/usr/hdp/current/zookeeper-server/bin/zkCli.sh")
 zk_node1 = config['clusterHostInfo']['zookeeper_hosts'][0];
 zk_client_port = str(default('/configurations/zoo.cfg/clientPort', None))
+
+hosts = config['clusterHostInfo']['zookeeper_hosts']
+hosts_length = len(hosts)
+zookeeper_hosts = ""
+
+for i, val in enumerate(hosts):
+    zookeeper_hosts += val + ":" + zk_client_port
+    
+    if (i + 1) < hosts_length:
+        zookeeper_hosts += ","
 
 # solr ssl
 map_solr_ssl = config['configurations']['solr-ssl'];

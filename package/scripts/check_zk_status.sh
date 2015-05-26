@@ -11,6 +11,13 @@ TEST_FILE_EXISTS=/tmp/zk_test_file_exists.log
 CREATE_FILE_OUTPUT=/tmp/zk_create_folder.log
 
 function check_zk_status() {
+    
+    if [ ! -e $ZK_CLI_SHELL ]; then
+        WARN_MSG="$ZK_CLI_SHELL does not exist, skipping validation"
+        echo $WARN_MSG
+        exit 0
+    fi
+    
 	/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'ls /' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT" 2>&1> $TEST_CONNECTION_FILE
 	
 	if [ -f $TEST_CONNECTION_FILE ]; then
@@ -30,8 +37,8 @@ function check_zk_status() {
 	        OUTPUT=$(/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'create $ZK_DIRECTORY solr_cloud_node' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT")
 	        echo $OUTPUT
 	    else
-	        ERROR_MSG="The $ZK_DIRECTORY directory already exists"
-	        echo $ERROR_MSG
+	        WARN_MSG="The $ZK_DIRECTORY directory already exists"
+	        echo $WARN_MSG
 	    fi
 	fi
 }

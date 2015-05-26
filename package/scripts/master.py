@@ -1,6 +1,7 @@
 from resource_management import *
 from subprocess import call
 from resource_management.core.logger import Logger
+import os
 
 class Master(Script):
     
@@ -61,6 +62,10 @@ class Master(Script):
     hdfs_dir = params.hdfs_dir
     hadoop_bin_dir = params.hadoop_bin_dir
     hadoop_conf_dir = params.hadoop_conf_dir
+    
+    if not os.path.exists(hadoop_bin_dir):
+        Logger.info(hadoop_conf_dir + " does not exist, skipping validation")
+        return
             
     safemode_command = "dfsadmin -safemode get | grep OFF"
     create_dir_cmd = format("fs -mkdir {hdfs_dir}")

@@ -33,6 +33,7 @@
               <scope>cluster</scope>
               <auto-deploy>
                 <enabled>true</enabled>
+                <co-locate>SOLR/SOLR_MASTER</co-locate>
               </auto-deploy>
             </dependency>
           </dependencies>

@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>solr.config.log</name>
-    <value>/var/log/solr/solr.log</value>
+    <value>/var/log/solr/solr_stack.log</value>
     <description>Ambari log for the Solr stack</description>
   </property>
 

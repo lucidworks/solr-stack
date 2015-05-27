@@ -58,45 +58,16 @@ class Master(Script):
     
   def add_support_hdfs(self):
     import params
-    
-    hdfs_dir = params.hdfs_dir
-    hadoop_bin_dir = params.hadoop_bin_dir
-    hadoop_conf_dir = params.hadoop_conf_dir
-    
-    if not os.path.exists(hadoop_bin_dir):
-        Logger.info(hadoop_conf_dir + " does not exist, skipping validation")
+        
+    if not os.path.exists(params.hadoop_bin_dir):
+        Logger.info(params.hadoop_bin_dir + " does not exist, skipping validation")
         return
             
-    safemode_command = "dfsadmin -safemode get | grep OFF"
-    create_dir_cmd = format("fs -mkdir {hdfs_dir}")
-    chmod_command = format("fs -chmod 777 {hdfs_dir}")
-    test_dir_exists = as_user(format("{hadoop_bin_dir}/hadoop --config {hadoop_conf_dir} fs -test -e {hdfs_dir}"), params.hdfs_user)
-            
-    ExecuteHadoop(safemode_command,
-                  user=params.hdfs_user,
-                  logoutput=True,
-                  conf_dir=params.hadoop_conf_dir,
-                  try_sleep=3,
-                  tries=20,
-                  bin_dir=params.hadoop_bin_dir
-                  )
-    ExecuteHadoop(create_dir_cmd,
-                  user=params.hdfs_user,
-                  logoutput=True,
-                  not_if=test_dir_exists,
-                  conf_dir=params.hadoop_conf_dir,
-                  try_sleep=3,
-                  tries=5,
-                  bin_dir=params.hadoop_bin_dir
-                  )
-    ExecuteHadoop(chmod_command,
-                  user=params.hdfs_user,
-                  logoutput=True,
-                  conf_dir=params.hadoop_conf_dir,
-                  try_sleep=3,
-                  tries=5,
-                  bin_dir=params.hadoop_bin_dir
-                  )
+    cmd = params.stack_dir + "/scripts/enable_hdfs.sh " + params.hdfs_dir + " " + params.hadoop_bin_dir + " " + params.hadoop_conf_dir + " >> " + params.stack_log
+    
+    Logger.info("Execute: " + cmd) 
+    
+    Execute(cmd)
         
   def enable_ssl(self):
     import params

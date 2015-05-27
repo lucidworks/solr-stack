@@ -18,29 +18,29 @@ function check_zk_status() {
         exit 0
     fi
     
-	/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'ls /' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT" 2>&1> $TEST_CONNECTION_FILE
-	
-	if [ -f $TEST_CONNECTION_FILE ]; then
-	    grep "CONNECTED" $TEST_CONNECTION_FILE
-	    
-	    if [ "$?" -eq 1 ]; then
-	        ERROR_MSG="Error: ZooKeeper is not running"
-	        echo $ERROR_MSG
-	        exit 1
-	    fi
-	    
-	    OUTPUT=$(/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'get $ZK_DIRECTORY' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT")
-	    echo $OUTPUT | grep "get $ZK_DIRECTORY solr_cloud_node"
-	    
-	    if [ "$?" -eq 1 ]; then
-	        echo $OUTPUT
-	        OUTPUT=$(/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'create $ZK_DIRECTORY solr_cloud_node' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT")
-	        echo $OUTPUT
-	    else
-	        WARN_MSG="The $ZK_DIRECTORY directory already exists"
-	        echo $WARN_MSG
-	    fi
-	fi
+    /var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'ls /' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT" 2>&1> $TEST_CONNECTION_FILE
+    
+    if [ -f $TEST_CONNECTION_FILE ]; then
+        grep "CONNECTED" $TEST_CONNECTION_FILE
+        
+        if [ "$?" -eq 1 ]; then
+            ERROR_MSG="Error: ZooKeeper is not running"
+            echo $ERROR_MSG
+            exit 1
+        fi
+        
+        OUTPUT=$(/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'get $ZK_DIRECTORY' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT" 2>&1> $CREATE_FILE_OUTPUT)
+        echo $OUTPUT | grep "Node does not exist: $ZK_DIRECTORY"
+        
+        if [ "$?" -eq 0 ]; then
+            echo $OUTPUT
+            OUTPUT=$(/var/lib/ambari-agent/ambari-sudo.sh su $SOLR_USER -s /bin/bash - -c "source $CONFIG_DIR/zookeeper-env.sh ; echo 'create $ZK_DIRECTORY null' | ${ZK_CLI_SHELL} -server $ZK_NODE1:$CLIENT_PORT")
+            echo $OUTPUT
+        else
+            WARN_MSG="The $ZK_DIRECTORY directory already exists"
+            echo $WARN_MSG
+        fi
+    fi
 }
 
 check_zk_status

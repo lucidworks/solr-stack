@@ -18,7 +18,7 @@
 
   <property>
     <name>solr.collection.sample.config.directory</name>
-    <value>basic_configs</value>
+    <value>data_driven_schema_configs</value>
     <description>Solr sample collection configurations directory. Mandatory
       This directory
       path is relative to /opt/lucidworks-hadoop/solr/server/solr/configset.

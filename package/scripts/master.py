@@ -8,7 +8,7 @@ class Master(Script):
   def parse_template(self):
     import params
 
-    File(format("{solr_dir}/latest/bin/solr.in.sh"),
+    File(format("{solr_dir}/bin/solr.in.sh"),
          content=Template("solr.in.sh.j2"),
          owner=params.solr_user
     )

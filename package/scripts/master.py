@@ -40,10 +40,6 @@ class Master(Script):
         
     Execute(cmd)
     
-    if params.enable_ssl:
-        self.parse_template()
-
-
   def configure(self, env):
     import params
     env.set_params(params)
@@ -72,6 +68,8 @@ class Master(Script):
   def enable_ssl(self):
     import params
     
+    self.parse_template()
+    
     cmd = params.stack_dir + '/scripts/enable_ssl.sh ' + params.solr_dir + ' ' + params.zk_node1 + " " + params.zk_client_port + " " + params.zookeeper_directory + " >> " + params.stack_log
 
     Logger.info("Execute: " + cmd)
@@ -86,6 +84,8 @@ class Master(Script):
 
     # import status properties defined in -env.xml file from status_params class
     import status_params
+    
+    env.set_params(params)
     
     # Ensure the shell scripts in the services dir are executable 
     Execute('find ' + params.stack_dir + ' -iname "*.sh" | xargs chmod +x')

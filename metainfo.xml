@@ -15,7 +15,7 @@
         rich document (e.g., Word, PDF) handling.
       </comment>
       <!-- Version of component -->
-      <version>5.2.0</version>
+      <version>5.2.1</version>
 
       <components>
         <!-- In this case, there is only one master component -->

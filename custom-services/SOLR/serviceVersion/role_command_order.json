@@ -1,0 +1,20 @@
+{
+  "general_deps": {
+    "_comment": "Dependencies for Solr service",
+    "SOLR_SERVER-START": [
+      "ZOOKEEPER_SERVER-START",
+      "NAMENODE-START",
+      "DATANODE-START",
+      "SECONDARY_NAMENODE-START",
+      "HDFS_SERVICE_CHECK-SERVICE_CHECK"
+    ],
+    "SOLR_SERVICE_CHECK-SERVICE_CHECK": [
+      "SOLR_SERVER-START"
+    ],
+    "SOLR_SERVER-STOP": [
+      "DATANODE-STOP",
+      "NAMENODE-STOP",
+      "SECONDARY_NAMENODE-STOP"
+    ]
+  }
+}

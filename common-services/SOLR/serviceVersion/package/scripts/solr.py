@@ -61,9 +61,9 @@ class Solr(Script):
         if params.solr_hdfs_enable:
             start_command += format(' -Dsolr.directoryFactory=HdfsDirectoryFactory -Dsolr.lock.type=hdfs')
             start_command += format(' -Dsolr.hdfs.home={default_fs}{solr_hdfs_directory}')
+            start_command += format(' -Dsolr.hdfs.confdir={hadoop_conf_dir}')
 
             if params.security_enabled:
-                start_command += format(' -Dsolr.hdfs.confdir={hadoop_conf_dir}')
                 start_command += format(' -Dsolr.hdfs.security.kerberos.enabled=true')
                 start_command += format(' -Dsolr.hdfs.security.kerberos.keytabfile={solr_kerberos_keytab}')
                 start_command += format(' -Dsolr.hdfs.security.kerberos.principal={solr_kerberos_principal}')

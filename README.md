@@ -14,7 +14,7 @@ Create Solr service pack:
 
 Deploy the Solr service on Ambari server:
 
-    ambari-server install-mpack --mpack=build/solr-service-mpack-{serviceVersion}.tar.gz -v
+    ambari-server install-mpack --mpack=build/solr-service-mpack-${version}.tar.gz -v
 
 Start Ambari server:
 

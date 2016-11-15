@@ -1,76 +1,51 @@
-import groovy.json.JsonSlurper
-
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+  repositories {
+    mavenCentral()
+  }
 }
 
-plugins {
-    id 'base'
-    id 'idea'
-}
+apply plugin: 'idea'
+apply plugin: 'distribution'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
+  gradleVersion = '3.2'
 }
 
-task setPackageVersion << {
-    ext.parsePackageVersion = { template, output, templates ->
-        def templateFile = new File(template)
-        def parsedContent = templateFile.text
-        templates.each { pattern, value ->
-            parsedContent = parsedContent.replaceAll(pattern, value)
+ext.src = 'src/main/mpack/'
+ext.repostemplate = 'src/main/template/repos/repoinfo.xml'
+ext.reposinfo552 = 'custom-services/SOLR/5.5.2/repos/'
+
+
+distributions {
+  main {
+    contents {
+      baseName = packageName
+      from { src }
+
+      from { src + 'mpack.json' }
+      filter { String line ->
+        line.replace("{VERSION}", "${version}")
+      }
+
+      into(reposinfo552) {
+        from { repostemplate }
+        filter { String line ->
+          line.replace("{REPOID}", "${repoid552}")
         }
-        def outputFile = new File(output)
-        outputFile.text = parsedContent
+      }
+
     }
 
-    if (!buildDir.exists()) {
-        new File("${buildDir}/tmp/common-services").mkdirs()
-        new File("${buildDir}/tmp/custom-services").mkdirs()
-    }
-
-    parsePackageVersion("mpack.json.template", "${buildDir}/tmp/mpack.json", ["\\{serviceVersion\\}"  : serviceVersion,
-                                                                            "\\{minAmbariVersion\\}": minAmbariVersion,
-                                                                            "\\{stackVersion\\}"    : stackVersion])
-    parsePackageVersion("common-services/SOLR/serviceVersion/metainfo.xml.template",
-            "${buildDir}/tmp/common-services/metainfo.xml", ["\\{serviceVersion\\}": serviceVersion])
-    parsePackageVersion("custom-services/SOLR/serviceVersion/metainfo.xml.template",
-            "${buildDir}/tmp/custom-services/metainfo.xml", ["\\{serviceVersion\\}": serviceVersion])
-    parsePackageVersion("common-services/SOLR/serviceVersion/service_advisor.py.template",
-            "${buildDir}/tmp/common-services/service_advisor.py", ["SOLRServiceAdvisor": 'SOLR' +
-            serviceVersion.replaceAll('\\.', '') + 'ServiceAdvisor'])
+  }
 }
 
-task makePackage(type: Tar, dependsOn: ["setPackageVersion"]) {
-    baseName = packageName
-    archiveName = packageName + '-mpack-' + serviceVersion + '.tar.gz'
-    compression = Compression.GZIP
-    extension = 'tar.gz'
-    destinationDir = file(buildDir)
+distTar {
+  destinationDir = file(buildDir)
+  appendix = 'mpack'
+  compression = Compression.GZIP
+  extension = 'tar.gz'
+}
 
-    into(packageName) {
-        into('') {
-            from buildDir.path + '/tmp/mpack.json'
-        }
 
-        into('common-services/SOLR/' + serviceVersion) {
-            from('common-services/SOLR/serviceVersion') {
-                include('**')
-                exclude('metainfo.xml.template')
-                exclude('service_advisor.py.template')
-            }
-            from buildDir.path + '/tmp/common-services/service_advisor.py',
-                    buildDir.path + '/tmp/common-services/metainfo.xml'
-        }
-
-        into('custom-services/SOLR/' + serviceVersion) {
-            from('custom-services/SOLR/serviceVersion') {
-                include('**')
-                exclude('metainfo.xml.template')
-            }
-            from buildDir.path + '/tmp/custom-services/metainfo.xml'
-        }
-    }
+task makePackage(dependsOn: [clean, distTar]) {
 }

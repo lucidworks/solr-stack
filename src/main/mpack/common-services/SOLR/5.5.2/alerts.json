@@ -1,0 +1,137 @@
+{
+  "SOLR": {
+    "SOLR_SERVER": [
+      {
+        "name": "solr",
+        "label": "Solr Web UI",
+        "description": "This host-level alert is triggered if the Solr Cloud Instance is unreachable.",
+        "interval": 1,
+        "scope": "ANY",
+        "source": {
+          "type": "WEB",
+          "uri": {
+            "http": "{{solr-config-env/solr_config_port}}",
+            "https": "{{solr-config-env/solr_config_port}}",
+            "https_property": "{{solr-ssl/solr_ssl_enable}}",
+            "https_property_value": "true",
+            "kerberos_keytab": "{{solr-config-env/solr_spnego_keytab_path}}",
+            "kerberos_principal": "{{solr-config-env/solr_spnego_principal_name}}",
+            "connection_timeout": 5.0,
+            "default_port": 8983
+          },
+          "reporting": {
+            "ok": {
+              "text": "HTTP {0} response in {2:.3f}s"
+            },
+            "warning": {
+              "text": "HTTP {0} response from {1} in {2:.3f}s ({3})"
+            },
+            "critical": {
+              "text": "Connection failed to {1} ({3})"
+            }
+          }
+        }
+      },
+      {
+        "name": "solr_cpu_usage",
+        "label": "Solr CPU Utilization",
+        "description": "This host-level alert is triggered if CPU utilization of the Solr exceeds certain warning and critical thresholds. It checks the Solr JMX Servlet for the SystemCPULoad property. The threshold values are in percent.",
+        "interval": 5,
+        "scope": "ANY",
+        "source": {
+          "type": "SCRIPT",
+          "path": "SOLR/5.5.2/package/alerts/alert_solr_cpu_metrics.py",
+          "parameters": [
+            {
+              "name": "connection.timeout",
+              "value": 5.0,
+              "type": "NUMERIC",
+              "units": "seconds",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "app.id",
+              "value": "solr-host-app",
+              "type": "STRING",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "metric.names",
+              "value": "solr.admin.info.system.processCpuLoad",
+              "type": "STRING",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "metric.solr.cpu.warning.threshold",
+              "display_name": "Warning threshold",
+              "type": "PERCENT",
+              "units": "%",
+              "value": 75,
+              "description": "CPU usage is greater than 50%",
+              "threshold": "WARNING"
+            },
+            {
+              "name": "metric.solr.cpu.critical.threshold",
+              "display_name": "Critical threshold",
+              "type": "PERCENT",
+              "units": "%",
+              "value": 90,
+              "description": "CPU usage is greater than 75%",
+              "threshold": "CRITICAL"
+            }
+          ]
+        }
+      },
+      {
+        "name": "solr_memory",
+        "label": "Solr Memory Utilization",
+        "description": "This host-level alert is triggered if CPU utilization of the Solr exceeds certain warning and critical thresholds. It checks the Solr JMX Servlet for the SystemCPULoad property. The threshold values are in percent.",
+        "interval": 5,
+        "scope": "ANY",
+        "source": {
+          "type": "SCRIPT",
+          "path": "SOLR/5.5.2/package/alerts/alert_solr_memory_metrics.py",
+          "parameters": [
+            {
+              "name": "connection.timeout",
+              "value": 5.0,
+              "type": "NUMERIC",
+              "units": "seconds",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "app.id",
+              "value": "solr-host-app",
+              "type": "STRING",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "metric.names",
+              "value": "solr.admin.info.jvm.memory.used,solr.admin.info.jvm.memory.max",
+              "type": "STRING",
+              "visibility": "HIDDEN"
+            },
+            {
+              "name": "metric.solr.memory.warning.threshold",
+              "display_name": "Warning threshold",
+              "type": "PERCENT",
+              "units": "%",
+              "value": 75,
+              "description": "Memory usage is greater than 50%",
+              "threshold": "WARNING"
+            },
+            {
+              "name": "metric.solr.memory.critical.threshold",
+              "display_name": "Critical threshold",
+              "type": "PERCENT",
+              "units": "%",
+              "value": 90,
+              "description": "Memory usage is greater than 75%",
+              "threshold": "CRITICAL"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -101,8 +101,9 @@
 
     <!-- solr.in.sh -->
     <property>
-        <name>content</name>
-        <description>This is the jinja template for solr.in.sh file</description>
+        <name>solr_in_sh_template</name>
+        <display-name>solr.in.sh template</display-name>
+        <description>This is a template for the solr.in.sh file</description>
         <value>
             # Licensed to the Apache Software Foundation (ASF) under one or more
             # contributor license agreements.  See the NOTICE file distributed with
@@ -122,14 +123,14 @@
             # By default the script will use JAVA_HOME to determine which java
             # to use, but you can set a specific path for Solr to use without
             # affecting other Java applications on your server/workstation.
-            #SOLR_JAVA_HOME=""
+            SOLR_JAVA_HOME={{java64_home}}
 
             # Increase Java Heap as needed to support your indexing / query needs
-            SOLR_HEAP="512m"
+            SOLR_HEAP="{{solr_config_memory}}"
 
             # Expert: If you want finer control over memory options, specify them directly
             # Comment out SOLR_HEAP if you are using this though, that takes precedence
-            #SOLR_JAVA_MEM="-Xms512m -Xmx512m"
+            # SOLR_JAVA_MEM="-Xms512m -Xmx512m"
 
             # Enable verbose GC logging
             GC_LOG_OPTS="-verbose:gc -XX:+PrintHeapAtGC -XX:+PrintGCDetails \
@@ -156,7 +157,7 @@
             # Set the ZooKeeper connection string if using an external ZooKeeper ensemble
             # e.g. host1:2181,host2:2181/chroot
             # Leave empty if not using SolrCloud
-            #ZK_HOST=""
+            # ZK_HOST=""
 
             # Set the ZooKeeper client timeout (for SolrCloud mode)
             #ZK_CLIENT_TIMEOUT="15000"

@@ -2,7 +2,6 @@
 
 from resource_management.libraries.functions.format import format
 from resource_management.libraries.script.script import Script
-from resource_management.core.logger import Logger
 
 config = Script.get_config()
 

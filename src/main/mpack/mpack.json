@@ -4,17 +4,23 @@
   "version": "{VERSION}",
   "description": "SOLR Management Pack",
   "prerequisites": {
-    "min_ambari_version": "2.4.0.0"
+    "min_ambari_version": "2.4.0.0",
+    "max-ambari-version" : ""
   },
   "artifacts": [
     {
-      "name": "SOLR-common-services",
+      "name": "solr-service-definitions ",
       "type": "service-definitions",
       "source_dir": "common-services",
       "service_version": "5.5.2"
     },
     {
-      "name": "SOLR-5.5.2",
+      "name" : "solr-extension-definitions",
+      "type" : "extension-definitions",
+      "source_dir": "extensions"
+    },
+    {
+      "name": "solr-addon-service-definitions",
       "type": "stack-addon-service-definitions",
       "source_dir": "custom-services",
       "service_versions_map": [

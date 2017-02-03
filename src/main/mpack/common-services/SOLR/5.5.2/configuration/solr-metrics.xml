@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+    <property>
+        <name>solr_enable_metrics</name>
+        <value>false</value>
+        <description>Enable Solr Metrics (Requires Ambari Metrics)</description>
+        <display-name>Enable Solr Metrics</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_core_stats</name>
+        <value>true</value>
+        <description>Enable Solr Core metrics</description>
+        <display-name>Solr Core stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_cache_stats</name>
+        <value>true</value>
+        <description>Enable Solr Cache metrics</description>
+        <display-name>Solr Cache stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_updatehandler_stats</name>
+        <value>true</value>
+        <description>Enable Solr UpdateHandler metrics</description>
+        <display-name>Solr UpdateHandler stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_queryhandler_stats</name>
+        <value>true</value>
+        <description>Enable Solr QueryHandler metrics</description>
+        <display-name>Solr QueryHandler stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_system_stats</name>
+        <value>true</value>
+        <description>Enable Solr System metrics</description>
+        <display-name>Solr System stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <!--<property>
+        <name>solr_status_stats</name>
+        <value>true</value>
+        <description>Enable Solr Status metrics</description>
+        <display-name>Solr Status stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>-->
+
+    <property>
+        <name>solr_metrics_config_conf_dir</name>
+        <value>/opt/lucidworks-hdpsearch/metrics/conf</value>
+        <description>Solr Metrics conf directory</description>
+        <value-attributes>
+            <type>directory</type>
+        </value-attributes>
+        <display-name>Solr Metrics configuration directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_config_pid_dir</name>
+        <value>/opt/lucidworks-hdpsearch/metrics/var</value>
+        <description>Solr Metrics PID directory</description>
+        <value-attributes>
+            <type>directory</type>
+        </value-attributes>
+        <display-name>Solr Metrics PID directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_config_log_dir</name>
+        <value>/opt/lucidworks-hdpsearch/metrics/log</value>
+        <description>Solr Metrics log directory</description>
+        <value-attributes>
+            <type>directory</type>
+        </value-attributes>
+        <display-name>Solr Metrics log directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_delay</name>
+        <value>500</value>
+        <description>
+            Time in milliseconds before task is to be executed.
+            Default value is 500 milliseconds.
+        </description>
+        <value-attributes>
+            <type>int</type>
+        </value-attributes>
+        <display-name>Solr Metrics delay</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_period</name>
+        <value>5000</value>
+        <description>
+            Time in milliseconds between successive task executions.
+            Default value is 5000 milliseconds / 5 seconds.
+        </description>
+        <value-attributes>
+            <type>int</type>
+        </value-attributes>
+        <display-name>Solr Metrics period</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_properties</name>
+        <description>This is the jinja template for solr.metrics.properties file</description>
+        <value>
+            # Security
+            truststore.path={{metric_truststore_path}}
+            truststore.type={{metric_truststore_type}}
+            truststore.password={{metric_truststore_password}}
+
+            solr.truststore.path={{solr_ssl_trust_store}}
+            solr.truststore.password={{solr_ssl_trust_store_password}}
+
+            jaas.file={{solr_metrics_kerberos_jaas_config}}
+
+            # Metrics
+            metrics.delay={{solr_metrics_delay}}
+            metrics.period={{solr_metrics_period}}
+
+            metrics.core.stats={{solr_core_stats}}
+            metrics.cache.stats={{solr_cache_stats}}
+            metrics.updatehandler.stats={{solr_updatehandler_stats}}
+            metrics.queryhandler.stats={{solr_queryhandler_stats}}
+            metrics.system.stats={{solr_system_stats}}
+            metrics.status.stats={{solr_status_stats}}
+
+            # Collector
+            collector.hosts={{ams_collector_hosts}}
+            collector.port={{metric_collector_port}}
+            collector.protocol={{metric_collector_protocol}}
+
+            # Solr
+            solr.host={{solr_protocol}}://{{hostname}}:{{solr_config_port}}/solr
+            solr.retry.times=3
+            solr.retry.interval=10
+        </value>
+        <value-attributes>
+            <type>content</type>
+        </value-attributes>
+    </property>
+</configuration>

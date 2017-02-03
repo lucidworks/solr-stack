@@ -15,9 +15,11 @@ def setup_solr_kerberos_auth():
     if not params.solr_cloud_mode:
         return
 
+    # TODO LWSHADOOP-637 add json in the config file and only upload it when kerberos is enable
     command = format('{zk_client_prefix} -cmd put {solr_cloud_zk_directory}{security_json} ')
     command += '\'{"authentication":{"class": "org.apache.solr.security.KerberosPlugin"}}\''
     Execute(command,
+            environment={'JAVA_HOME': params.java64_home},
             ignore_failures=True,
             user=params.solr_config_user
             )
@@ -30,6 +32,7 @@ def remove_solr_kerberos_auth():
         return
 
     code, output = call(format('{zk_client_prefix} -cmd get {solr_cloud_zk_directory}{security_json}'),
+                        env={'JAVA_HOME': params.java64_home},
                         timeout=60
                         )
 
@@ -37,6 +40,7 @@ def remove_solr_kerberos_auth():
         return
 
     Execute(format('{zk_client_prefix} -cmd clear {solr_cloud_zk_directory}{security_json}'),
+            environment={'JAVA_HOME': params.java64_home},
             timeout=60,
             ignore_failures=True,
             user=params.solr_config_user

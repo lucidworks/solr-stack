@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-from resource_management.core.resources.system import Execute
-from resource_management.libraries.script import Script
-from resource_management.core.logger import Logger
-from resource_management.libraries.functions.format import format
-from solr_utils import exists_collection
-
 import os
+
+from resource_management.core.logger import Logger
+from resource_management.core.resources.system import Execute
+from resource_management.libraries.functions.format import format
+from resource_management.libraries.script import Script
+
+from solr_utils import exists_collection
 
 
 class ServiceCheck(Script):
@@ -28,19 +29,21 @@ class ServiceCheck(Script):
 
         if not params.solr_cloud_mode:
             Execute(
-                format('{solr_config_bin_dir}/solr create_core -c {solr_collection_name}' +
-                       ' -d {solr_collection_config_dir} -p {solr_config_port} >> {solr_config_service_log_file} 2>&1'),
-                environment={'JAVA_HOME': params.java64_home},
-                user=params.solr_config_user
+                    format(
+                            '{solr_config_bin_dir}/solr create_core -c {solr_collection_name}' +
+                            ' -d {solr_collection_config_dir} -p {solr_config_port} >> {solr_config_service_log_file} 2>&1'
+                    ),
+                    environment={'JAVA_HOME': params.java64_home},
+                    user=params.solr_config_user
             )
         else:
-            Execute(
-                format('{solr_config_bin_dir}/solr create_collection -c {solr_collection_name}' +
-                       ' -d {solr_collection_config_dir} -p {solr_config_port}' +
-                       ' -s {solr_collection_shards} -rf {solr_collection_replicas}' +
-                       ' >> {solr_config_service_log_file} 2>&1'),
-                environment={'JAVA_HOME': params.java64_home},
-                user=params.solr_config_user
+            Execute(format(
+                    '{solr_config_bin_dir}/solr create_collection -c {solr_collection_name}' +
+                    ' -d {solr_collection_config_dir} -p {solr_config_port}' +
+                    ' -s {solr_collection_shards} -rf {solr_collection_replicas}' +
+                    ' >> {solr_config_service_log_file} 2>&1'),
+                    environment={'JAVA_HOME': params.java64_home},
+                    user=params.solr_config_user
             )
 
 

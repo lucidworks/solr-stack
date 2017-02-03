@@ -14,11 +14,10 @@
    limitations under the License.
 -->
 <metainfo>
-    <schemaVersion>2.0</schemaVersion>
-    <services>
-        <service>
-            <name>SOLR</name>
-            <extends>common-services/SOLR/5.5.2</extends>
-        </service>
-    </services>
+    <stacks>
+        <stack>
+            <name>HDP</name>
+            <version>2.4</version>
+        </stack>
+    </stacks>
 </metainfo>

@@ -33,9 +33,7 @@ distributions {
           line.replace("{REPOID}", "${repoid552}")
         }
       }
-
     }
-
   }
 }
 

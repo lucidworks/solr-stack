@@ -11,8 +11,7 @@
     {
       "name": "solr-service-definitions ",
       "type": "service-definitions",
-      "source_dir": "common-services",
-      "service_version": "5.5.2"
+      "source_dir": "common-services"
     },
     {
       "name" : "solr-extension-definitions",
@@ -30,7 +29,17 @@
           "applicable_stacks" : [
             {
               "stack_name" : "HDP",
-              "stack_version" : "2.4"
+              "stack_version" : "2.5"
+            }
+          ]
+        },
+       {
+          "service_name" : "SOLR",
+          "service_version" : "6.4.2",
+          "applicable_stacks" : [
+            {
+              "stack_name" : "HDP",
+              "stack_version" : "2.6"
             }
           ]
         }

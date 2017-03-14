@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>solr_ssl_key_store_type</name>
+        <value>JKS</value>
+        <description>SSL keystore type</description>
+        <display-name>SSL keystore type</display-name>
+    </property>
+
+    <property>
+        <name>solr_ssl_trust_store_type</name>
+        <value>JKS</value>
+        <description>SSL Trust store type</description>
+        <display-name>SSL Trust store type</display-name>
+    </property>
+</configuration>

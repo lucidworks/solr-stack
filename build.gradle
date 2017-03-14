@@ -8,12 +8,13 @@ apply plugin: 'idea'
 apply plugin: 'distribution'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.2'
+  gradleVersion = '3.4.1'
 }
 
 ext.src = 'src/main/mpack/'
 ext.repostemplate = 'src/main/template/repos/repoinfo.xml'
 ext.reposinfo552 = 'custom-services/SOLR/5.5.2/repos/'
+ext.reposinfo642 = 'custom-services/SOLR/6.4.2/repos/'
 
 
 distributions {
@@ -23,14 +24,21 @@ distributions {
       from { src }
 
       from { src + 'mpack.json' }
-      filter { String line ->
+      filter { line ->
         line.replace("{VERSION}", "${version}")
       }
 
       into(reposinfo552) {
         from { repostemplate }
-        filter { String line ->
+        filter { line ->
           line.replace("{REPOID}", "${repoid552}")
+        }
+      }
+
+      into(reposinfo642) {
+        from { repostemplate }
+        filter { line ->
+          line.replace("{REPOID}", "${repoid642}")
         }
       }
     }

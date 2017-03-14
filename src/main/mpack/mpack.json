@@ -5,7 +5,13 @@
   "description": "SOLR Management Pack",
   "prerequisites": {
     "min_ambari_version": "2.5.0.0",
-    "max-ambari-version" : ""
+    "max-ambari-version": "",
+    "min_stack_versions": [
+      {
+        "stack_name": "HDP",
+        "stack_version": "2.4"
+      }
+    ]
   },
   "artifacts": [
     {
@@ -14,8 +20,8 @@
       "source_dir": "common-services"
     },
     {
-      "name" : "solr-extension-definitions",
-      "type" : "extension-definitions",
+      "name": "solr-extension-definitions",
+      "type": "extension-definitions",
       "source_dir": "extensions"
     },
     {
@@ -24,22 +30,22 @@
       "source_dir": "custom-services",
       "service_versions_map": [
         {
-          "service_name" : "SOLR",
-          "service_version" : "5.5.2",
-          "applicable_stacks" : [
+          "service_name": "SOLR",
+          "service_version": "5.5.2",
+          "applicable_stacks": [
             {
               "stack_name" : "HDP",
-              "stack_version" : "2.5"
+              "stack_version" : "2.4"
             }
           ]
         },
-       {
-          "service_name" : "SOLR",
-          "service_version" : "6.4.2",
-          "applicable_stacks" : [
+        {
+          "service_name": "SOLR",
+          "service_version": "6.4.2",
+          "applicable_stacks": [
             {
-              "stack_name" : "HDP",
-              "stack_version" : "2.6"
+              "stack_name": "HDP",
+              "stack_version": "2.6"
             }
           ]
         }

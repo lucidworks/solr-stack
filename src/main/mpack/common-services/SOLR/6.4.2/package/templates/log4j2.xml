@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- See http://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender for documentation -->
+<!-- start with -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector for a significant
+performance boost -->
+<Configuration status="WARN" monitorInterval="120">
+<ThreadContextMapFilter onMatch="ACCEPT" onMismatch="NEUTRAL" operator="or">
+    <KeyValuePair key="DEBUG" value="true"/>
+</ThreadContextMapFilter>
+<Appenders>
+    <RollingRandomAccessFile name="file" fileName="{{solr_metrics_config_log_dir}}/solr-metrics.log"
+                             filePattern="{{solr_metrics_config_log_dir}}/solr-metrics.%d{yyyy-MM-dd}-%i.log.gz">
+        <PatternLayout>
+            <pattern>%d{ISO8601} - %-5p [%t:%C{1}@%L] - %X - %m%n</pattern>
+        </PatternLayout>
+        <Policies>
+            <TimeBasedTriggeringPolicy/> <!-- Rotated everyday -->
+            <SizeBasedTriggeringPolicy size="100MB" /> <!-- Rotated every 100 MB -->
+        </Policies>
+        <DefaultRolloverStrategy>
+            <Delete basePath="{{solr_metrics_config_log_dir}}" maxDepth="1">
+                <IfFileName glob="solr-metrics*.log.gz">
+                    <IfAny>
+                        <!-- Uncomment next line if you want to limit disk space used by logs
+                        <IfAccumulatedFileSize exceeds="2GB" />
+                        -->
+                        <IfLastModified age="30d" />
+                    </IfAny>
+                </IfFileName>
+            </Delete>
+        </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+</Appenders>
+<Loggers>
+    <logger name="com.lucidworks.ambari" level="INFO"/>
+    <logger name="org.apache.zookeeper" level="WARN" />
+    <Root level="INFO">
+        <AppenderRef ref="file"/>
+    </Root>
+</Loggers>
+</Configuration>

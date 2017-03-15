@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
-<configuration>
+<configuration supports_final="false" supports_adding_forbidden="true">
     <property>
         <name>solr_hdfs_enable</name>
         <value>true</value>

@@ -91,24 +91,24 @@ default_fs = config['configurations']['core-site']['fs.defaultFS']
 dfs_type = default('/commandParams/dfs_type', '')
 security_enabled = config['configurations']['cluster-env']['security_enabled']
 kinit_path_local = get_kinit_path(
-        default('/configurations/kerberos-env/executable_search_paths', None))
+    default('/configurations/kerberos-env/executable_search_paths', None))
 hdfs_principal_name = config['configurations']['hadoop-env']['hdfs_principal_name']
 solr_hdfs_delete_write_lock_files = bool(map_solr_hdfs['solr_hdfs_delete_write_lock_files'])
 
 HdfsResource = functools.partial(
-        HdfsResource,
-        user=hdfs_user,
-        hdfs_resource_ignore_file='/var/lib/ambari-agent/data/.hdfs_resource_ignore',
-        security_enabled=security_enabled,
-        keytab=hdfs_user_keytab,
-        kinit_path_local=kinit_path_local,
-        hadoop_bin_dir=hadoop_bin_dir,
-        hadoop_conf_dir=hadoop_conf_dir,
-        principal_name=hdfs_principal_name,
-        hdfs_site=hdfs_site,
-        default_fs=default_fs,
-        immutable_paths=get_not_managed_resources(),
-        dfs_type=dfs_type
+    HdfsResource,
+    user=hdfs_user,
+    hdfs_resource_ignore_file='/var/lib/ambari-agent/data/.hdfs_resource_ignore',
+    security_enabled=security_enabled,
+    keytab=hdfs_user_keytab,
+    kinit_path_local=kinit_path_local,
+    hadoop_bin_dir=hadoop_bin_dir,
+    hadoop_conf_dir=hadoop_conf_dir,
+    principal_name=hdfs_principal_name,
+    hdfs_site=hdfs_site,
+    default_fs=default_fs,
+    immutable_paths=get_not_managed_resources(),
+    dfs_type=dfs_type
 )
 
 # solr + SSL
@@ -137,6 +137,9 @@ solr_metrics_kerberos_jaas_config = format('{solr_config_conf_dir}/solr_metrics_
 solr_metrics_kerberos_keytab = map_solr_config.get('solr_metrics_keytab_path', '')
 solr_metrics_kerberos_principal = map_solr_config.get('solr_metrics_principal_name', '')
 security_json = '/security.json'
+map_solr_kerberos = config['configurations']['solr-kerberos']
+solr_security_json = map_solr_kerberos.get('solr_security_json', '')
+
 
 if security_enabled:
     solr_kerberos_principal = solr_kerberos_principal.replace('_HOST', hostname)
@@ -163,7 +166,7 @@ if has_metric_collector:
             'metrics_collector_vip_port']
     else:
         metric_collector_web_address = default(
-                "/configurations/ams-site/timeline.metrics.service.webapp.address", "0.0.0.0:6188")
+            "/configurations/ams-site/timeline.metrics.service.webapp.address", "0.0.0.0:6188")
         if metric_collector_web_address.find(':') != -1:
             metric_collector_port = metric_collector_web_address.split(':')[1]
         else:
@@ -174,11 +177,11 @@ if has_metric_collector:
     else:
         metric_collector_protocol = 'http'
     metric_truststore_path = default(
-            "/configurations/ams-ssl-client/ssl.client.truststore.location", "")
+        "/configurations/ams-ssl-client/ssl.client.truststore.location", "")
     metric_truststore_type = default("/configurations/ams-ssl-client/ssl.client.truststore.type",
                                      "")
     metric_truststore_password = default(
-            "/configurations/ams-ssl-client/ssl.client.truststore.password", "")
+        "/configurations/ams-ssl-client/ssl.client.truststore.password", "")
 
 solr_metrics = config['configurations']['solr-metrics']
 solr_enable_metrics = bool(solr_metrics['solr_enable_metrics'])

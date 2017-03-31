@@ -18,7 +18,7 @@
     <services>
         <service>
             <name>SOLR</name>
-            <version>6.4.2</version>
+            <version>6.5.0</version>
             <extends>common-services/SOLR/5.5.2</extends>
             <minJdk>1.8</minJdk>
             <maxJdk>1.8</maxJdk>

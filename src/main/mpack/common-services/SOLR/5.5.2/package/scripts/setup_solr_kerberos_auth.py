@@ -52,4 +52,7 @@ def _has_security_json():
         env={'JAVA_HOME': params.java64_home},
         timeout=60
     )
+
+    if "{}" == output:
+        return False
     return "NoNodeException" not in output

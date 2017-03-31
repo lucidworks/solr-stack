@@ -30,7 +30,8 @@ def remove_solr_kerberos_auth():
     import params
 
     if not _has_security_json():
-        Logger.debug(format("Solr Security Json not found {solr_cloud_zk_directory}{security_json}"))
+        Logger.debug(
+            format("Solr Security Json not found {solr_cloud_zk_directory}{security_json}"))
         return
 
     Execute(format('{zk_client_prefix} -cmd clear {solr_cloud_zk_directory}{security_json}'),
@@ -48,8 +49,11 @@ def _has_security_json():
         return False
 
     code, output = call(
-        format('{zk_client_prefix} -cmd get {solr_cloud_zk_directory}{security_json}'),
-        env={'JAVA_HOME': params.java64_home},
-        timeout=60
+            format('{zk_client_prefix} -cmd get {solr_cloud_zk_directory}{security_json}'),
+            env={'JAVA_HOME': params.java64_home},
+            timeout=60
     )
+
+    if "{}" == output:
+        return False
     return "NoNodeException" not in output

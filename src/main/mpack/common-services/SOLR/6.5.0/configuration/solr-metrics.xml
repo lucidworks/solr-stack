@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
-<configuration supports_final="false" supports_adding_forbidden="true"  supports_do_not_extend="true">
+<configuration supports_final="false" supports_adding_forbidden="true" supports_do_not_extend="true">
 
     <property>
         <name>solr_enable_metrics</name>
@@ -14,64 +14,44 @@
     </property>
 
     <property>
-        <name>solr_core_stats</name>
+        <name>solr_core_metrics</name>
         <value>true</value>
         <description>Enable Solr Core metrics</description>
-        <display-name>Solr Core stats</display-name>
+        <display-name>Solr Core Metrics</display-name>
         <value-attributes>
             <type>boolean</type>
         </value-attributes>
     </property>
 
     <property>
-        <name>solr_cache_stats</name>
+        <name>solr_jetty_metrics</name>
         <value>true</value>
-        <description>Enable Solr Cache metrics</description>
-        <display-name>Solr Cache stats</display-name>
+        <description>Enable Solr Jetty metrics</description>
+        <display-name>Solr Jetty metrics</display-name>
         <value-attributes>
             <type>boolean</type>
         </value-attributes>
     </property>
 
     <property>
-        <name>solr_updatehandler_stats</name>
+        <name>solr_jvm_metrics</name>
         <value>true</value>
-        <description>Enable Solr UpdateHandler metrics</description>
-        <display-name>Solr UpdateHandler stats</display-name>
+        <description>Enable Solr JVM metrics</description>
+        <display-name>Solr JVM stats</display-name>
         <value-attributes>
             <type>boolean</type>
         </value-attributes>
     </property>
 
     <property>
-        <name>solr_queryhandler_stats</name>
+        <name>solr_node_metrics</name>
         <value>true</value>
-        <description>Enable Solr QueryHandler metrics</description>
-        <display-name>Solr QueryHandler stats</display-name>
+        <description>Enable Solr Node metrics</description>
+        <display-name>Solr Node stats</display-name>
         <value-attributes>
             <type>boolean</type>
         </value-attributes>
     </property>
-
-    <property>
-        <name>solr_system_stats</name>
-        <value>true</value>
-        <description>Enable Solr System metrics</description>
-        <display-name>Solr System stats</display-name>
-        <value-attributes>
-            <type>boolean</type>
-        </value-attributes>
-    </property>
-
-    <!--<property>
-        <name>solr_status_stats</name>
-        <value>true</value>
-        <description>Enable Solr Status metrics</description>
-        <display-name>Solr Status stats</display-name>
-        <value-attributes>
-            <type>boolean</type>
-        </value-attributes>
-    </property>-->
 
     <property>
         <name>solr_metrics_config_conf_dir</name>
@@ -143,16 +123,15 @@
 
             jaas.file={{solr_metrics_kerberos_jaas_config}}
 
-            # Metrics
+            # MetricsLoader
             metrics.delay={{solr_metrics_delay}}
             metrics.period={{solr_metrics_period}}
 
-            metrics.core.stats={{solr_core_stats}}
-            metrics.cache.stats={{solr_cache_stats}}
-            metrics.updatehandler.stats={{solr_updatehandler_stats}}
-            metrics.queryhandler.stats={{solr_queryhandler_stats}}
-            metrics.system.stats={{solr_system_stats}}
-            metrics.status.stats={{solr_status_stats}}
+            metrics.json=
+            metrics.core.metrics={{solr_core_metrics}}
+            metrics.jetty.metrics={{solr_jetty_metrics}}
+            metrics.jvm.metrics={{solr_jvm_metrics}}
+            metrics.node.metrics={{solr_node_metrics}}
 
             # Collector
             collector.hosts={{ams_collector_hosts}}
@@ -161,8 +140,8 @@
 
             # Solr
             solr.host={{solr_protocol}}://{{hostname}}:{{solr_config_port}}/solr
-            solr.retry.times=3
-            solr.retry.interval=10
+            solr.retry.exponential.wait=3
+            solr.retry.stop.after.delay=2
         </value>
         <value-attributes>
             <type>content</type>

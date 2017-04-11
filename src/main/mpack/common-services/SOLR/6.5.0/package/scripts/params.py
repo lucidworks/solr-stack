@@ -188,12 +188,12 @@ solr_enable_metrics = bool(solr_metrics['solr_enable_metrics'])
 
 solr_metrics_delay = solr_metrics['solr_metrics_delay']
 solr_metrics_period = solr_metrics['solr_metrics_period']
-solr_core_stats = bool(solr_metrics['solr_core_stats'])
-solr_cache_stats = bool(solr_metrics['solr_cache_stats'])
-solr_updatehandler_stats = bool(solr_metrics['solr_updatehandler_stats'])
-solr_queryhandler_stats = bool(solr_metrics['solr_queryhandler_stats'])
-solr_system_stats = bool(solr_metrics['solr_system_stats'])
-solr_status_stats = bool(solr_metrics.get('solr_status_stats', False))
+
+solr_core_metrics = bool(solr_metrics['solr_core_metrics'])
+solr_jetty_metrics = bool(solr_metrics['solr_jetty_metrics'])
+solr_jvm_metrics = bool(solr_metrics['solr_jvm_metrics'])
+solr_node_metrics = bool(solr_metrics['solr_node_metrics'])
+
 
 solr_metrics_config_conf_dir = solr_metrics['solr_metrics_config_conf_dir']
 solr_metrics_config_pid_dir = solr_metrics['solr_metrics_config_pid_dir']

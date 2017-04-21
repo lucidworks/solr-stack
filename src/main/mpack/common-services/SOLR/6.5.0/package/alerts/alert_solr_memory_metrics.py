@@ -29,7 +29,7 @@ AMS_METRICS_GET_URL = "/ws/v1/timeline/metrics?%s"
 CONNECTION_TIMEOUT_DEFAULT = 5.0
 CONNECTION_TIMEOUT_KEY = "connection.timeout"
 
-METRIC_NAMES_DEFAULT = "solr.admin.info.jvm.memory.used,solr.admin.info.jvm.memory.max"
+METRIC_NAMES_DEFAULT = "solr.jvm.jvm.memory.total.used.value,solr.jvm.jvm.memory.total.max.value"
 METRIC_NAMES_KEY = "metric.names"
 
 APP_ID_DEFAULT = "solr-host-app"
@@ -108,12 +108,12 @@ def execute(configurations={}, parameters={}, host_name=None):
     memory_used = -1
 
     for metrics_data in data_json["metrics"]:
-        if "solr.admin.info.jvm.memory.max" in metrics_data["metricname"]:
+        if "solr.jvm.jvm.memory.total.used.value" in metrics_data["metricname"]:
             metrics = metrics_data["metrics"].values()
             if len(metrics) > 0:
                 memory_max = metrics[0] / (1024 * 1024)
                 continue
-        if "solr.admin.info.jvm.memory.used" in metrics_data["metricname"]:
+        if "solr.jvm.jvm.memory.total.max.value" in metrics_data["metricname"]:
             metrics = metrics_data["metrics"].values()
             if len(metrics) > 0:
                 memory_used = metrics[0] / (1024 * 1024)
@@ -122,7 +122,7 @@ def execute(configurations={}, parameters={}, host_name=None):
     if int(memory_max) == -1 or int(memory_used) == -1:
         return RESULT_STATE_UNKNOWN, ["There is not enough data to compare"]
 
-    memory_value = (memory_used / memory_max) * 100
+    memory_value = memory_used / memory_max
     response = 'Memory usage is {0:.2f} %'.format(memory_value)
 
     if int(memory_value) >= warning_threshold and int(memory_value) < critical_threshold:

@@ -29,7 +29,7 @@ AMS_METRICS_GET_URL = "/ws/v1/timeline/metrics?%s"
 CONNECTION_TIMEOUT_DEFAULT = 5.0
 CONNECTION_TIMEOUT_KEY = "connection.timeout"
 
-METRIC_NAMES_DEFAULT = "solr.admin.info.system.processCpuLoad"
+METRIC_NAMES_DEFAULT = "solr.jvm.jvm.os.processcpuload.value"
 METRIC_NAMES_KEY = "metric.names"
 
 APP_ID_DEFAULT = "solr-host-app"
@@ -107,7 +107,7 @@ def execute(configurations={}, parameters={}, host_name=None):
     cpu_load_value = -1
 
     for metrics_data in data_json["metrics"]:
-        if "solr.admin.info.system.processCpuLoad" in metrics_data["metricname"]:
+        if "solr.jvm.jvm.os.processcpuload.value" in metrics_data["metricname"]:
             metrics = metrics_data["metrics"].values()
             if len(metrics) > 0:
                 cpu_load_value = metrics[0] * 100

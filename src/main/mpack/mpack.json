@@ -30,9 +30,9 @@
       "source_dir": "custom-services",
       "service_versions_map": [
         {
-          "service_name": "SOLR",
-          "service_version": "5.5.2",
-          "applicable_stacks": [
+          "service_name" : "SOLR",
+          "service_version" : "5.5.4",
+          "applicable_stacks" : [
             {
               "stack_name" : "HDP",
               "stack_version" : "2.4"

@@ -20,8 +20,6 @@
             <name>SOLR</name>
             <version>6.5.0</version>
             <extends>common-services/SOLR/5.5.4</extends>
-            <minJdk>1.8</minJdk>
-            <maxJdk>1.8</maxJdk>
         </service>
     </services>
 </metainfo>

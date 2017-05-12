@@ -19,9 +19,6 @@ class Solr(Script):
         env.set_params(params)
         self.install_packages(env)
 
-        Execute('mkdir -p /opt/lucidworks-hdpsearch')
-        Execute(format('wget -qO- {solr_config_url} | tar xvz -C /opt/ && mv /opt/solr-* /opt/lucidworks-hdpsearch/solr'))
-
     def configure(self, env):
         import params
         env.set_params(params)

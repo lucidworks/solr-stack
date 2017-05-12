@@ -16,15 +16,6 @@
         <display-name>Solr stop wait</display-name>
     </property>
 
-    <property>
-         <name>solr_config_url</name>
-         <value>http://archive.apache.org/dist/lucene/solr/6.5.0/solr-6.5.0.tgz</value>
-         <description>
-             The tgz url for a Solr release
-         </description>
-         <display-name>Solr tgz download url</display-name>
-    </property>
-
     <!-- solr.in.sh -->
     <property>
         <name>solr_in_sh_template</name>

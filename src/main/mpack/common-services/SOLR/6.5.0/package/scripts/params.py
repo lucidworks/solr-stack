@@ -35,7 +35,6 @@ zookeeper_hosts_list = config['clusterHostInfo']['zookeeper_hosts']
 zookeeper_hosts = build_zookeeper_hosts()
 
 map_solr_config = config['configurations']['solr-config-env']
-solr_config_url = map_solr_config['solr_config_url']
 solr_config_user = map_solr_config['solr_config_user']
 solr_hdfs_home_directory = format('/user/{solr_config_user}')
 solr_config_group = map_solr_config['solr_config_group']

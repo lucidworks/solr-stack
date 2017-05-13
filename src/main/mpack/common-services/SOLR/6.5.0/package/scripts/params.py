@@ -84,9 +84,9 @@ kinit_path_local = get_kinit_path(default('/configurations/kerberos-env/executab
 # solr + HDFS
 map_solr_hdfs = config['configurations']['solr-hdfs']
 solr_hdfs_enable = bool(map_solr_hdfs['solr_hdfs_enable'])
+solr_hdfs_prefix = '#' if not solr_hdfs_enable else ''
 
 if solr_hdfs_enable:
-    solr_hdfs_prefix = '#' if not solr_hdfs_enable else ''
     solr_hdfs_directory = map_solr_hdfs['solr_hdfs_directory']
     hadoop_bin_dir = stack_select.get_hadoop_dir('bin')
     hadoop_conf_dir = conf_select.get_hadoop_conf_dir()

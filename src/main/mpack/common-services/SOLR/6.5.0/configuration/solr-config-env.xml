@@ -170,7 +170,7 @@
             #SOLR_SSL_CLIENT_TRUST_STORE_TYPE=
 
             # Settings for authentication
-            {{solr_kerberos_prefix}}SOLR_AUTHENTICATION_CLIENT_CONFIGURER=org.apache.solr.client.solrj.impl.Krb5HttpClientConfigurer
+            {{solr_kerberos_prefix}}SOLR_AUTH_TYPE="kerberos"
             {{solr_kerberos_prefix}}SOLR_AUTHENTICATION_OPTS="-Djava.security.auth.login.config={{solr_kerberos_jaas_config}} \
             {{solr_kerberos_prefix}}-Dsolr.kerberos.cookie.domain={{solr_kerberos_cookie_domain}} \
             {{solr_kerberos_prefix}}-Dsolr.kerberos.cookie.portaware=true \

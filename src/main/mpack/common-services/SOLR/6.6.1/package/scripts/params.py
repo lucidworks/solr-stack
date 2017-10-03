@@ -46,6 +46,7 @@ solr_config_service_log_file = format('{solr_config_service_log_dir}/solr-servic
 solr_config_conf_dir = map_solr_config['solr_config_conf_dir']
 solr_config_data_dir = map_solr_config['solr_config_data_dir']
 solr_config_in_sh = map_solr_config['solr_in_sh_template']
+solr_stop_wait = map_solr_config['solr_stop_wait']
 solr_hostname = hostname
 
 log4j_properties = config['configurations']['solr-log4j']['content']
@@ -83,9 +84,9 @@ kinit_path_local = get_kinit_path(default('/configurations/kerberos-env/executab
 # solr + HDFS
 map_solr_hdfs = config['configurations']['solr-hdfs']
 solr_hdfs_enable = bool(map_solr_hdfs['solr_hdfs_enable'])
+solr_hdfs_prefix = '#' if not solr_hdfs_enable else ''
 
 if solr_hdfs_enable:
-    solr_hdfs_prefix = '#' if not solr_hdfs_enable else ''
     solr_hdfs_directory = map_solr_hdfs['solr_hdfs_directory']
     hadoop_bin_dir = stack_select.get_hadoop_dir('bin')
     hadoop_conf_dir = conf_select.get_hadoop_conf_dir()
@@ -123,6 +124,8 @@ solr_ssl_trust_store = map_solr_ssl['solr_ssl_trust_store']
 solr_ssl_trust_store_password = map_solr_ssl['solr_ssl_trust_store_password']
 solr_ssl_need_client_auth = map_solr_ssl['solr_ssl_need_client_auth']
 solr_ssl_want_client_auth = map_solr_ssl['solr_ssl_want_client_auth']
+solr_ssl_key_store_type = map_solr_ssl['solr_ssl_key_store_type']
+solr_ssl_trust_store_type = map_solr_ssl['solr_ssl_trust_store_type']
 solr_protocol = 'https' if solr_ssl_enable else 'http'
 
 # solr + kerberos auth
@@ -139,6 +142,7 @@ solr_metrics_kerberos_principal = map_solr_config.get('solr_metrics_principal_na
 security_json = '/security.json'
 map_solr_kerberos = config['configurations']['solr-security']
 solr_security_json = map_solr_kerberos.get('solr_security_json', '')
+
 
 if security_enabled:
     solr_kerberos_principal = solr_kerberos_principal.replace('_HOST', hostname)
@@ -165,7 +169,7 @@ if has_metric_collector:
             'metrics_collector_vip_port']
     else:
         metric_collector_web_address = default(
-                "/configurations/ams-site/timeline.metrics.service.webapp.address", "0.0.0.0:6188")
+            "/configurations/ams-site/timeline.metrics.service.webapp.address", "0.0.0.0:6188")
         if metric_collector_web_address.find(':') != -1:
             metric_collector_port = metric_collector_web_address.split(':')[1]
         else:
@@ -176,26 +180,27 @@ if has_metric_collector:
     else:
         metric_collector_protocol = 'http'
     metric_truststore_path = default(
-            "/configurations/ams-ssl-client/ssl.client.truststore.location", "")
+        "/configurations/ams-ssl-client/ssl.client.truststore.location", "")
     metric_truststore_type = default("/configurations/ams-ssl-client/ssl.client.truststore.type",
                                      "")
     metric_truststore_password = default(
-            "/configurations/ams-ssl-client/ssl.client.truststore.password", "")
+        "/configurations/ams-ssl-client/ssl.client.truststore.password", "")
 
 solr_metrics = config['configurations']['solr-metrics']
 solr_enable_metrics = bool(solr_metrics.get('solr_enable_metrics', False))
 
 solr_metrics_delay = solr_metrics['solr_metrics_delay']
 solr_metrics_period = solr_metrics['solr_metrics_period']
-solr_core_stats = bool(solr_metrics['solr_core_stats'])
-solr_cache_stats = bool(solr_metrics['solr_cache_stats'])
-solr_updatehandler_stats = bool(solr_metrics['solr_updatehandler_stats'])
-solr_queryhandler_stats = bool(solr_metrics['solr_queryhandler_stats'])
-solr_system_stats = bool(solr_metrics['solr_system_stats'])
-solr_status_stats = bool(solr_metrics.get('solr_status_stats', False))
+
+solr_core_metrics = bool(solr_metrics.get('solr_core_metrics', False))
+solr_jetty_metrics = bool(solr_metrics.get('solr_jetty_metrics', False))
+solr_jvm_metrics = bool(solr_metrics.get('solr_jvm_metrics', False))
+solr_node_metrics = bool(solr_metrics.get('solr_node_metrics', False))
+
 
 solr_metrics_config_conf_dir = solr_metrics['solr_metrics_config_conf_dir']
 solr_metrics_config_pid_dir = solr_metrics['solr_metrics_config_pid_dir']
 solr_metrics_config_log_dir = solr_metrics['solr_metrics_config_log_dir']
 
 solr_metrics_properties = solr_metrics['solr_metrics_properties']
+solr_metrics_log4j2 = solr_metrics['solr_metrics_log4j2']

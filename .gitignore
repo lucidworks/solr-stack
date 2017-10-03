@@ -3,5 +3,7 @@
 .swp
 .idea
 *.iml
+*.ipr
+*.iws
 .gradle/
 build/

@@ -23,25 +23,24 @@ METRICS_COLLECTOR_VIP_HOST_KEY = '{{cluster-env/metrics_collector_vip_host}}'
 METRICS_COLLECTOR_VIP_PORT_KEY = '{{cluster-env/metrics_collector_vip_port}}'
 
 SOLR_METRICS_CONF_DIR = '{{solr-metrics/solr_metrics_config_conf_dir}}'
-SOLR_METRICS_PERIOD = '{{solr-metrics/solr_metrics_period}}'
+SOLR_METRICS_PERIOD = "{{solr-metrics/solr_metrics_period}}"
 
 AMS_METRICS_GET_URL = "/ws/v1/timeline/metrics?%s"
 
 CONNECTION_TIMEOUT_DEFAULT = 5.0
 CONNECTION_TIMEOUT_KEY = "connection.timeout"
 
-METRIC_NAMES_DEFAULT = "solr.jvm.gauge.os.processCpuLoad"
+METRIC_NAMES_DEFAULT = "solr.jvm.gauge.memory.total.used,solr.jvm.gauge.memory.total.max"
 METRIC_NAMES_KEY = "metric.names"
 
 APP_ID_DEFAULT = "solr-host-app"
 APP_ID_KEY = "app.id"
 
 WARNING_THRESHOLD_DEFAULT = 50
-WARNING_THRESHOLD_KEY = "metric.solr.cpu.warning.threshold"
+WARNING_THRESHOLD_KEY = "metric.solr.memory.warning.threshold"
 
 CRITICAL_THRESHOLD_DEFAULT = 75
-CRITICAL_THRESHOLD_KEY = "metric.solr.cpu.critical.threshold"
-
+CRITICAL_THRESHOLD_KEY = "metric.solr.memory.critical.threshold"
 
 def get_tokens():
     """
@@ -100,12 +99,33 @@ def execute(configurations={}, parameters={}, host_name=None):
         return RESULT_STATE_UNKNOWN, [message]
 
     data_json = json.loads(data)
+
+    split = metric_name.split(",")
+    metric_name_map = {
+        "used" if ("used" in split[0]) else "max": split[0],
+        "used" if ("used" in split[1]) else "max": split[1]
+    }
+
     timestamp = -1
+    metrics = {}
 
     for metrics_data in data_json["metrics"]:
-        if metric_name in metrics_data["metricname"]:
-            metrics = metrics_data["metrics"].values()
-            timestamp = metrics_data["timestamp"]
+        if metric_name_map["used"] in metrics_data["metricname"]:
+            metrics["used"] = metrics_data["metrics"].values()[0]
+            current_timestamp = metrics_data["timestamp"]
+            if timestamp == -1:
+                timestamp = current_timestamp
+            elif timestamp > current_timestamp:
+                timestamp = current_timestamp
+                continue
+        if metric_name_map["max"] in metrics_data["metricname"]:
+            metrics["max"] = metrics_data["metrics"].values()[0]
+            current_timestamp = metrics_data["timestamp"]
+            if timestamp == -1:
+                timestamp = current_timestamp
+            elif timestamp > current_timestamp:
+                timestamp = current_timestamp
+                continue
 
     if int(timestamp) == -1:
         return RESULT_STATE_UNKNOWN, ["There is not enough data"]
@@ -119,21 +139,22 @@ def execute(configurations={}, parameters={}, host_name=None):
                   "ambari metrics is running"
         return RESULT_STATE_WARNING, [message]
 
-    cpu_load_value = metrics[0] * 100
-    response = 'CPU load {0:.2f} %'.format(cpu_load_value)
+    memory_used = metrics["used"] / (1024 * 1024)
+    memory_max = metrics["max"] / (1024 * 1024)
+    memory_value = memory_used / memory_max
+    response = 'Memory usage is {0:.2f} %'.format(memory_value)
 
-    if int(cpu_load_value) >= warning_threshold and int(cpu_load_value) < critical_threshold:
+    if int(memory_value) >= warning_threshold and int(memory_value) < critical_threshold:
         return RESULT_STATE_WARNING, [response]
 
-    if cpu_load_value >= critical_threshold:
+    if memory_value >= critical_threshold:
         return RESULT_STATE_CRITICAL, [response]
 
     return RESULT_STATE_OK, [response]
 
 
 def get_collector_config(configurations):
-    version = '{VERSION}'
-    solr_package_dir = format('/opt/lucidworks-hdpsearch-{version}')
+    solr_package_dir = '/opt/lucidworks-hdpsearch'
     solr_metrics_config_conf_dir = format(configurations[SOLR_METRICS_CONF_DIR])
     solr_metrics_props = "{0}/{1}".format(solr_metrics_config_conf_dir, "solr.metrics.properties")
     props = load_properties_from_file(solr_metrics_props)

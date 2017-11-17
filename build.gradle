@@ -35,13 +35,6 @@ distributions {
         }
       }
 
-      into(reposinfo555) {
-        from { repostemplate }
-        filter { line ->
-          line.replace("{REPOID}", "${repoid555}")
-        }
-      }
-
       into(reposinfo662) {
         from { repostemplate }
         filter { line ->

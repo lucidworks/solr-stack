@@ -12,9 +12,10 @@ task wrapper(type: Wrapper) {
 }
 
 ext.src = 'src/main/mpack/'
+ext.mpack = 'mpack.json'
 ext.repostemplate = 'src/main/template/repos/repoinfo.xml'
-ext.reposinfo554 = 'custom-services/SOLR/5.5.4/repos/'
-ext.reposinfo650 = 'custom-services/SOLR/6.5.0/repos/'
+ext.reposinfo555 = 'custom-services/SOLR/5.5.5/repos/'
+ext.reposinfo662 = 'custom-services/SOLR/6.6.2/repos/'
 
 distributions {
   main {
@@ -22,22 +23,29 @@ distributions {
       baseName = packageName
       from { src }
 
-      from { src + 'mpack.json' }
+      from { src + mpack }
       filter { line ->
         line.replace("{VERSION}", "${version}")
       }
 
-      into(reposinfo554) {
+      into(reposinfo555) {
         from { repostemplate }
         filter { line ->
-          line.replace("{REPOID}", "${repoid554}")
+          line.replace("{REPOID}", "${repoid555}")
         }
       }
 
-      into(reposinfo650) {
+      into(reposinfo555) {
         from { repostemplate }
         filter { line ->
-          line.replace("{REPOID}", "${repoid650}")
+          line.replace("{REPOID}", "${repoid555}")
+        }
+      }
+
+      into(reposinfo662) {
+        from { repostemplate }
+        filter { line ->
+          line.replace("{REPOID}", "${repoid662}")
         }
       }
     }

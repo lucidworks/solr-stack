@@ -6,9 +6,10 @@ from resource_management.core.resources.system import Execute
 from resource_management.core.shell import call
 from resource_management.libraries.functions.format import format
 
-COLLECTION_PATTERN = "\/solr\/[a-zA-Z0-9\._-]+"
+COLLECTION_PATTERN = "{solr_hdfs_directory}\/?[a-zA-Z0-9\._-]+"
 CORE_PATTERN = "{collection_path}\/core_node[0-9]+"
 WRITE_LOCK_PATTERN = "{0}/data/index/write.lock "
+HOSTNAME_VERIFIER_PATTERN = "{core_node_name}((?!shard|core_node).)*\"node_name\":\"{solr_hostname}"
 
 
 def solr_port_validation():
@@ -62,7 +63,9 @@ def exists_collection(collection_name):
 
 
 def get_collection_paths(hadoop_output):
-    pattern = re.compile(COLLECTION_PATTERN)
+    import params
+
+    pattern = re.compile(format(COLLECTION_PATTERN))
     collection_paths = re.findall(pattern, hadoop_output)
     return collection_paths
 
@@ -74,14 +77,30 @@ def get_core_paths(hadoop_output, collection_path):
 
 
 def get_write_lock_files_solr_cloud(hadoop_prefix, collections):
+    import params
+
     write_locks_to_delete = ''
 
     for collection_path in collections:
-        code, output = call(format('{hadoop_prefix} -ls {collection_path}'))
-        core_paths = get_core_paths(output, collection_path)
+        collection_name = collection_path.replace(format('{solr_hdfs_directory}/'), '')
+        code_state, output_state = call(format(
+            '{zk_client_prefix} -cmd get {solr_cloud_zk_directory}/collections/{collection_name}/state.json'),
+            env={'JAVA_HOME': params.java64_home},
+            timeout=60
+        )
+        if code_state == 0:
+            code, output = call(format('{hadoop_prefix} -ls {collection_path}'))
+            core_paths = get_core_paths(output, collection_path)
 
-        for core_path in core_paths:
-            write_locks_to_delete += WRITE_LOCK_PATTERN.format(core_path)
+            for core_path in core_paths:
+                core_node_name = core_path.replace(format('{collection_path}/'), '')
+                pattern = re.compile(format(HOSTNAME_VERIFIER_PATTERN), re.MULTILINE|re.DOTALL)
+                exists_core_for_hostname = re.search(pattern, output_state)
+                if exists_core_for_hostname is not None:
+                    Logger.info(format('Found existing {core_node_name} for actual hostname: {solr_hostname}'))
+                    write_locks_to_delete += WRITE_LOCK_PATTERN.format(core_path)
+        else:
+            Logger.error(format('Cannot get {collection_name} state.json for actual hostname: {solr_hostname}'))
 
     return write_locks_to_delete
 
@@ -114,6 +133,7 @@ def delete_write_lock_files():
         write_locks_to_delete = get_write_lock_files_solr_standalone(collections)
 
     if len(write_locks_to_delete) > 1:
+        Logger.info(format('For hostname: \'{solr_hostname}\' lock files \'{write_locks_to_delete}\' will be deleted.'))
         Execute(
             format('{hadoop_prefix} -rm -f {write_locks_to_delete}'),
             user=params.hdfs_user

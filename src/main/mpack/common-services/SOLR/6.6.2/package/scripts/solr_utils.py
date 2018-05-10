@@ -6,7 +6,7 @@ from resource_management.core.resources.system import Execute
 from resource_management.core.shell import call
 from resource_management.libraries.functions.format import format
 
-COLLECTION_PATTERN = "{solr_hdfs_directory}\/?[a-zA-Z0-9\._-]+"
+COLLECTION_PATTERN = "{solr_hdfs_directory}/[a-zA-Z0-9\._-]+"
 CORE_PATTERN = "{collection_path}\/core_node[0-9]+"
 INDEX_PATTERN = "{core_node_path}\/data\/index[\.0-9]{{0,20}}"
 WRITE_LOCK_PATTERN = "{0}/write.lock "
@@ -67,6 +67,7 @@ def get_collection_paths(hadoop_output):
     import params
 
     pattern = re.compile(format(COLLECTION_PATTERN))
+
     collection_paths = re.findall(pattern, hadoop_output)
     return collection_paths
 

@@ -12,10 +12,14 @@
     "SOLR_SERVICE_CHECK-SERVICE_CHECK": [
       "SOLR_SERVER-START"
     ],
-    "SOLR_SERVER-STOP": [
-      "DATANODE-STOP",
-      "NAMENODE-STOP",
-      "SECONDARY_NAMENODE-STOP"
+    "DATANODE-STOP": [
+      "SOLR_SERVER-STOP"
+    ],
+    "NAMENODE-STOP": [
+      "SOLR_SERVER-STOP"
+    ],
+    "ZOOKEEPER_SERVER-STOP": [
+      "SOLR_SERVER-STOP"
     ]
   }
 }

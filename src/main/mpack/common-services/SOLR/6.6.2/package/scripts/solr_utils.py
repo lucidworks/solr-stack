@@ -64,7 +64,6 @@ def exists_collection(collection_name):
 
 def get_collection_paths(hadoop_output):
     import params
-
     pattern = re.compile(format(COLLECTION_PATTERN))
 
     collection_paths = re.findall(pattern, hadoop_output)

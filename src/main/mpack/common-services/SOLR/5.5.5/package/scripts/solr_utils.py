@@ -9,6 +9,7 @@ from resource_management.libraries.functions.format import format
 COLLECTION_PATTERN = "{solr_hdfs_directory}/[a-zA-Z0-9\._-]+"
 CORE_PATTERN = "{collection_path}\/core_node[0-9]+"
 WRITE_LOCK_PATTERN = "{0}/data/index/write.lock "
+HOSTNAME_VERIFIER_PATTERN = "{core_node_name}\":{{((?![^_]shard|core_node).)*\"node_name\":\"{solr_hostname}"
 
 
 def solr_port_validation():
@@ -76,14 +77,30 @@ def get_core_paths(hadoop_output, collection_path):
 
 
 def get_write_lock_files_solr_cloud(hadoop_prefix, collections):
+    import params
+
     write_locks_to_delete = ''
 
     for collection_path in collections:
         code, output = call(format('{hadoop_prefix} -ls {collection_path}'))
         core_paths = get_core_paths(output, collection_path)
 
+        collection_name = collection_path.replace(format('{solr_hdfs_directory}/'), '')
+        zk_code, zk_output = call(format(
+            '{zk_client_prefix} -cmd get {solr_cloud_zk_directory}/collections/{collection_name}/state.json'),
+            env={'JAVA_HOME': params.java64_home},
+            timeout=60
+        )
+        if zk_code != 0:
+            Logger.error(format('Cannot determine cores owned by [{solr_hostname}] in collection [{collection_name}] due to ZK error.'))
+            continue
+
         for core_path in core_paths:
-            write_locks_to_delete += WRITE_LOCK_PATTERN.format(core_path)
+            core_node_name = core_path.replace(format('{collection_path}/'), '')
+            pattern = re.compile(format(HOSTNAME_VERIFIER_PATTERN), re.MULTILINE|re.DOTALL)
+            core_on_hostname = re.search(pattern, zk_output)
+            if core_on_hostname is not None:
+                write_locks_to_delete += WRITE_LOCK_PATTERN.format(core_path)
 
     return write_locks_to_delete
 
@@ -116,6 +133,7 @@ def delete_write_lock_files():
         write_locks_to_delete = get_write_lock_files_solr_standalone(collections)
 
     if len(write_locks_to_delete) > 1:
+        Logger.info(format('For hostname: \'{solr_hostname}\' lock files \'{write_locks_to_delete}\' will be deleted.'))
         Execute(
             format('{hadoop_prefix} -rm -f {write_locks_to_delete}'),
             user=params.hdfs_user

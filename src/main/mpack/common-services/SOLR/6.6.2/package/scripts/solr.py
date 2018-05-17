@@ -24,8 +24,7 @@ class Solr(Script):
         env.set_params(params)
         setup_solr()
 
-        if params.solr_cloud_mode:
-            setup_solr_cloud()
+        setup_solr_cloud()
 
         if params.solr_hdfs_enable:
             setup_solr_hdfs_support()

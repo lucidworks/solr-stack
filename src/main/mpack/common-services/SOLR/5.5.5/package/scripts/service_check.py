@@ -27,24 +27,14 @@ class ServiceCheck(Script):
             Logger.warning(format("Collection {solr_collection_name} already exists, skipping ..."))
             return
 
-        if not params.solr_cloud_mode:
-            Execute(
-                    format(
-                            '{solr_config_bin_dir}/solr create_core -c {solr_collection_name}' +
-                            ' -d {solr_collection_config_dir} -p {solr_config_port} >> {solr_config_service_log_file} 2>&1'
-                    ),
-                    environment={'JAVA_HOME': params.java64_home},
-                    user=params.solr_config_user
-            )
-        else:
-            Execute(format(
-                    '{solr_config_bin_dir}/solr create_collection -c {solr_collection_name}' +
-                    ' -d {solr_collection_config_dir} -p {solr_config_port}' +
-                    ' -s {solr_collection_shards} -rf {solr_collection_replicas}' +
-                    ' >> {solr_config_service_log_file} 2>&1'),
-                    environment={'JAVA_HOME': params.java64_home},
-                    user=params.solr_config_user
-            )
+        Execute(format(
+            '{solr_config_bin_dir}/solr create_collection -c {solr_collection_name}' +
+            ' -d {solr_collection_config_dir} -p {solr_config_port}' +
+            ' -s {solr_collection_shards} -rf {solr_collection_replicas}' +
+            ' >> {solr_config_service_log_file} 2>&1'),
+            environment={'JAVA_HOME': params.java64_home},
+            user=params.solr_config_user
+        )
 
 
 if __name__ == "__main__":

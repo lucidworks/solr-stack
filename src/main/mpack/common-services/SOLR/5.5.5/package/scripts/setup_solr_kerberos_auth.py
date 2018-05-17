@@ -44,9 +44,6 @@ def remove_solr_kerberos_auth():
 def _has_security_json():
     import params
 
-    if not params.solr_cloud_mode:
-        return False
-
     code, output = call(
         format('{zk_client_prefix} -cmd get {solr_cloud_zk_directory}{security_json}'),
         env={'JAVA_HOME': params.java64_home},

@@ -46,11 +46,6 @@ def is_solr_running():
 def exists_collection(collection_name):
     import params
 
-    if not params.solr_cloud_mode:
-        if os.path.isdir(format("{solr_config_data_dir}/{collection_name}")):
-            return True
-        return False
-
     code, output = call(format(
         '{zk_client_prefix} -cmd get {solr_cloud_zk_directory}/collections/{collection_name}'),
         env={'JAVA_HOME': params.java64_home},
@@ -105,15 +100,6 @@ def get_write_lock_files_solr_cloud(hadoop_prefix, collections):
     return write_locks_to_delete
 
 
-def get_write_lock_files_solr_standalone(collections):
-    write_locks_to_delete = ''
-
-    for collection_path in collections:
-        write_locks_to_delete += WRITE_LOCK_PATTERN.format(collection_path)
-
-    return write_locks_to_delete
-
-
 def delete_write_lock_files():
     import params
 
@@ -127,10 +113,7 @@ def delete_write_lock_files():
     code, output = call(format('{hadoop_prefix} -ls {solr_hdfs_directory}'))
     collections = get_collection_paths(output)
 
-    if params.solr_cloud_mode:
-        write_locks_to_delete = get_write_lock_files_solr_cloud(hadoop_prefix, collections)
-    else:
-        write_locks_to_delete = get_write_lock_files_solr_standalone(collections)
+    write_locks_to_delete = get_write_lock_files_solr_cloud(hadoop_prefix, collections)
 
     if len(write_locks_to_delete) > 1:
         Logger.info(format('For hostname: \'{solr_hostname}\' lock files \'{write_locks_to_delete}\' will be deleted.'))

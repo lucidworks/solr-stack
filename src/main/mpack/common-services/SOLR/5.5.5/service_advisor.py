@@ -108,11 +108,9 @@ class SOLR555ServiceAdvisor(service_advisor.ServiceAdvisor):
         return self.stackAdvisor.toConfigurationValidationProblems(items, SOLR_CONFIG_ENV)
 
     def validate_solr_cloud_configuration(self):
-        items = [] if "false" in self.solr_cloud_properties["solr_cloud_enable"] else \
-            [
-                self.validator_entry('solr_cloud_enable', self.is_boolean, self.solr_cloud_properties),
+        items = [
                 self.validator_entry('solr_cloud_zk_directory', self.is_valid_path, self.solr_cloud_properties),
-            ]
+        ]
         return self.stackAdvisor.toConfigurationValidationProblems(items, SOLR_CLOUD)
 
     def validate_solr_hdfs_configuration(self):

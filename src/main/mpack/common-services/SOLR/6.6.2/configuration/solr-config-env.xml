@@ -76,7 +76,7 @@
             # Set the ZooKeeper connection string if using an external ZooKeeper ensemble
             # e.g. host1:2181,host2:2181/chroot
             # Leave empty if not using SolrCloud
-            {{solr_cloud_mode_prefix}}ZK_HOST="{{zookeeper_hosts}}{{solr_cloud_zk_directory}}"
+            ZK_HOST="{{zookeeper_hosts}}{{solr_cloud_zk_directory}}"
 
             # Set the ZooKeeper client timeout (for SolrCloud mode)
             #ZK_CLIENT_TIMEOUT="15000"
@@ -102,10 +102,6 @@
             #SOLR_OPTS="$SOLR_OPTS -Dsolr.autoSoftCommit.maxTime=3000"
             #SOLR_OPTS="$SOLR_OPTS -Dsolr.autoCommit.maxTime=60000"
             #SOLR_OPTS="$SOLR_OPTS -Dsolr.clustering.enabled=true"
-
-            # Not cloud + kerberos start settings
-            {{solr_not_cloud_mode_prefix}}{{solr_kerberos_prefix}}SOLR_OPTS="$SOLR_OPTS \
-            {{solr_not_cloud_mode_prefix}}{{solr_kerberos_prefix}}-DauthenticationPlugin=org.apache.solr.security.KerberosPlugin"
 
             # HDFS start settings
             {{solr_hdfs_prefix}}SOLR_OPTS="$SOLR_OPTS -Dsolr.directoryFactory=HdfsDirectoryFactory \

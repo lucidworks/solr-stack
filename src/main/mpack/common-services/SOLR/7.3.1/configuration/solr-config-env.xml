@@ -130,7 +130,7 @@
             SOLR_HOME={{solr_config_data_dir}}
 
             # Path to a directory that Solr will use as root for data folders for each core.
-            # If not set, defaults to <instance_dir>/data. Overridable per core through 'dataDir' core property
+            # If not set, defaults to $instance_dir/data. Overridable per core through 'dataDir' core property
             #SOLR_DATA_HOME=
 
             # Solr provides a default Log4J configuration properties file in server/resources

@@ -17,7 +17,7 @@
     <stacks>
         <stack>
             <name>HDP</name>
-            <version>2.5</version><!-- TODO test only it should be 3.0 (mpack) -->
+            <version>2.6</version><!-- TODO test only it should be 3.0 (mpack) -->
         </stack>
     </stacks>
 </metainfo>

@@ -10,14 +10,16 @@
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
+   See the License for thparae specific language governing permissions and
    limitations under the License.
 -->
 <metainfo>
-    <stacks>
-        <stack>
-            <name>HDP</name>
-            <version>2.5</version><!-- TODO test only it should be 3.0 (mpack) -->
-        </stack>
-    </stacks>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>SOLR</name>
+            <version>7.3.1</version>
+            <extends>common-services/SOLR/6.6.2</extends>
+        </service>
+    </services>
 </metainfo>

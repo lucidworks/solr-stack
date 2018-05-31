@@ -45,6 +45,16 @@
           "applicable_stacks": [
             {
               "stack_name": "HDP",
+              "stack_version": "2.5"
+            }
+          ]
+        },
+        {
+          "service_name": "SOLR",
+          "service_version": "7.3.1",
+          "applicable_stacks": [
+            {
+              "stack_name": "HDP",
               "stack_version": "2.6"
             }
           ]

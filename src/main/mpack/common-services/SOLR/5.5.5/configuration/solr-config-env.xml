@@ -97,7 +97,19 @@
             <overridable>false</overridable>
         </value-attributes>
         <display-name>Solr group</display-name>
-    </property>
+      </property>
+
+      <property>
+          <name>solr_stop_key</name>
+          <value>solrrocks</value>
+          <property-type>PASSWORD</property-type>
+          <description>Solr stop key</description>
+          <value-attributes>
+            <type>password</type>
+            <overridable>false</overridable>
+          </value-attributes>
+          <display-name>Solr stop key</display-name>
+      </property>
 
     <!-- solr.in.sh -->
     <property>
@@ -176,6 +188,9 @@
 
             # The script will use SOLR_PORT+10000 for the RMI_PORT or you can set it here
             # RMI_PORT=18983
+
+            # The keyword to be used when stopping Solr via Jetty's STOP.PORT functionality
+            STOP_KEY={{solr_stop_key}}
 
             # Set the thread stack size
             SOLR_OPTS="$SOLR_OPTS -Xss256k"

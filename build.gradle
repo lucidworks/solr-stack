@@ -16,7 +16,7 @@ ext.mpack = 'mpack.json'
 ext.repostemplate = 'src/main/template/repos/repoinfo.xml'
 ext.reposinfo555 = 'custom-services/SOLR/5.5.5/repos/'
 ext.reposinfo662 = 'custom-services/SOLR/6.6.2/repos/'
-ext.reposinfo731 = 'custom-services/SOLR/7.3.1/repos/'
+ext.reposinfo740 = 'custom-services/SOLR/7.4.0/repos/'
 
 distributions {
   main {
@@ -42,7 +42,7 @@ distributions {
           line.replace("{REPOID}", "${repoid662}")
         }
       }
-      into(reposinfo731) {
+      into(reposinfo740) {
         from { repostemplate }
         filter { line ->
           line.replace("{REPOID}", "${repoid731}")

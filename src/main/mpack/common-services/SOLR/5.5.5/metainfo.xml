@@ -32,7 +32,10 @@
                     <osFamily>any</osFamily>
                     <packages>
                         <package>
-                            <name>lucidworks-hdpsearch</name>
+                          <name>lsof</name>
+                        </package>
+                        <package>
+                          <name>lucidworks-hdpsearch</name>
                         </package>
                     </packages>
                 </osSpecific>

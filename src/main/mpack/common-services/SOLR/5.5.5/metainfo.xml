@@ -58,6 +58,7 @@
                 <config-type>example-collection</config-type>
                 <config-type>solr-security</config-type>
                 <config-type>solr-metrics</config-type>
+                <config-type>ams-env</config-type>
             </configuration-dependencies>
             <restartRequiredAfterChange>true</restartRequiredAfterChange>
 

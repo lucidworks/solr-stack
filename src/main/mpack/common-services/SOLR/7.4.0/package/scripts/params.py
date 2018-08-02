@@ -28,10 +28,10 @@ def build_zookeeper_hosts():
 
 config = Script.get_config()
 
-java64_home = config['hostLevelParams']['java_home']
-hostname = config['hostname']
+java64_home = config['ambariLevelParams']['java_home']
+hostname = config['agentLevelParams']['hostname']
 zk_client_port = str(default('/configurations/zoo.cfg/clientPort', None))
-zookeeper_hosts_list = config['clusterHostInfo']['zookeeper_hosts']
+zookeeper_hosts_list = default("/clusterHostInfo/zookeeper_server_hosts", [])
 zookeeper_hosts = build_zookeeper_hosts()
 
 map_solr_config = config['configurations']['solr-config-env']
@@ -96,7 +96,7 @@ if solr_hdfs_enable:
     hdfs_site = config['configurations']['hdfs-site']
     hdfs_user_keytab = config['configurations']['hadoop-env']['hdfs_user_keytab']
     default_fs = config['configurations']['core-site']['fs.defaultFS']
-    dfs_type = default('/commandParams/dfs_type', '')
+    dfs_type = default('/clusterLevelParams/dfs_type', '')
     hdfs_principal_name = config['configurations']['hadoop-env']['hdfs_principal_name']
     solr_hdfs_delete_write_lock_files = bool(map_solr_hdfs['solr_hdfs_delete_write_lock_files'])
 

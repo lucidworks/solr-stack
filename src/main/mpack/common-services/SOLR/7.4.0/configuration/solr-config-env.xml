@@ -217,4 +217,38 @@
           <property-file-type>xml</property-file-type>
         </value-attributes>
     </property>
+
+    <property>
+        <name>solr_config_user</name>
+        <value>solr</value>
+        <property-type>USER</property-type>
+        <description>User for Solr service</description>
+        <value-attributes>
+            <type>user</type>
+            <overridable>false</overridable>
+            <user-groups>
+                <property>
+                    <type>cluster-env</type>
+                    <name>user_group</name>
+                </property>
+                <property>
+                    <type>solr-env</type>
+                    <name>solr_group</name>
+                </property>
+            </user-groups>
+        </value-attributes>
+        <display-name>Solr user</display-name>
+    </property>
+
+    <property>
+        <name>solr_config_group</name>
+        <value>solr</value>
+        <property-type>GROUP</property-type>
+        <description>Group for Solr service</description>
+        <value-attributes>
+            <type>group</type>
+            <overridable>false</overridable>
+        </value-attributes>
+        <display-name>Solr group</display-name>
+    </property>
 </configuration>

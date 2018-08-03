@@ -34,7 +34,7 @@ def setup_solr():
     )
 
     File(
-            format("{solr_config_conf_dir}/log4j.properties"),
+            format("{solr_config_conf_dir}/log4j2.xml"),
             content=InlineTemplate(params.log4j_properties),
             owner=params.solr_config_user
     )

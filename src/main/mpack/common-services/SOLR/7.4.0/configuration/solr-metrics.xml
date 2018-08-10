@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration supports_final="false" supports_adding_forbidden="true" supports_do_not_extend="true">
+
+    <property>
+        <name>solr_enable_metrics</name>
+        <value>false</value>
+        <description>Enable Solr Metrics (Requires Ambari Metrics)</description>
+        <display-name>Enable Solr Metrics</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_core_metrics</name>
+        <value>true</value>
+        <description>Enable Solr Core metrics</description>
+        <display-name>Solr Core Metrics</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_jetty_metrics</name>
+        <value>true</value>
+        <description>Enable Solr Jetty metrics</description>
+        <display-name>Solr Jetty metrics</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_jvm_metrics</name>
+        <value>true</value>
+        <description>Enable Solr JVM metrics</description>
+        <display-name>Solr JVM stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_node_metrics</name>
+        <value>true</value>
+        <description>Enable Solr Node metrics</description>
+        <display-name>Solr Node stats</display-name>
+        <value-attributes>
+            <type>boolean</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_metrics_config_conf_dir</name>
+        <value>{solr_package_dir}/metrics/conf</value>
+        <description>Solr Metrics conf directory</description>
+        <display-name>Solr Metrics configuration directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_config_pid_dir</name>
+        <value>{solr_package_dir}/metrics/var</value>
+        <description>Solr Metrics PID directory</description>
+        <display-name>Solr Metrics PID directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_config_log_dir</name>
+        <value>{solr_package_dir}/metrics/log</value>
+        <description>Solr Metrics log directory</description>
+        <display-name>Solr Metrics log directory</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_delay</name>
+        <value>500</value>
+        <description>
+            Time in milliseconds before task is to be executed.
+            Default value is 500 milliseconds.
+        </description>
+        <value-attributes>
+            <type>int</type>
+        </value-attributes>
+        <display-name>Solr Metrics delay</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_period</name>
+        <value>5000</value>
+        <description>
+            Time in milliseconds between successive task executions.
+            Default value is 5000 milliseconds / 5 seconds.
+        </description>
+        <value-attributes>
+            <type>int</type>
+        </value-attributes>
+        <display-name>Solr Metrics period</display-name>
+    </property>
+
+    <property>
+        <name>solr_metrics_properties</name>
+        <description>This is the jinja template for solr.metrics.properties file</description>
+        <value>
+            # Security
+            truststore.path={{metric_truststore_path}}
+            truststore.type={{metric_truststore_type}}
+            truststore.password={{metric_truststore_password}}
+
+            solr.truststore.path={{solr_ssl_trust_store}}
+            solr.truststore.password={{solr_ssl_trust_store_password}}
+
+            jaas.file={{solr_metrics_kerberos_jaas_config}}
+
+            # MetricsLoader
+            metrics.delay={{solr_metrics_delay}}
+            metrics.period={{solr_metrics_period}}
+
+            metrics.json=
+            metrics.core.metrics={{solr_core_metrics}}
+            metrics.jetty.metrics={{solr_jetty_metrics}}
+            metrics.jvm.metrics={{solr_jvm_metrics}}
+            metrics.node.metrics={{solr_node_metrics}}
+
+            # Collector
+            collector.hosts={{ams_collector_hosts}}
+            collector.port={{metric_collector_port}}
+            collector.protocol={{metric_collector_protocol}}
+
+            # Solr
+            solr.host={{solr_protocol}}://{{hostname}}:{{solr_config_port}}/solr
+            solr.retry.exponential.wait=3
+            solr.retry.stop.after.delay=2
+        </value>
+        <value-attributes>
+            <type>content</type>
+        </value-attributes>
+    </property>
+
+    <property>
+        <name>solr_metrics_log4j2</name>
+        <description>This is the jinja template for log4j2.json file</description>
+        <value>
+        {
+          "configuration": {
+            "name": "Default",
+            "properties": {
+              "property": [
+                {
+                  "name": "directory",
+                  "value": "{{solr_metrics_config_log_dir}}"
+                },
+                {
+                  "name": "log_name",
+                  "value": "solr-metrics"
+                }
+              ]
+            },
+            "appenders": {
+              "RollingFile": {
+                "name": "file",
+                "fileName": "${directory}/${log_name}.log",
+                "filePattern": "${directory}/${log_name}.%d{yyyy-MM-dd}-%i.log.gz",
+                "PatternLayout": {
+                  "pattern": "%d{ISO8601} - %-5p [%t:%C{1}@%L] - %X - %m%n"
+                },
+                "Policies": {
+                  "TimeBasedTriggeringPolicy": {
+                  },
+                  "SizeBasedTriggeringPolicy": {
+                    "size": "100MB"
+                  }
+                },
+                "DefaultRolloverStrategy": {
+                  "delete": {
+                    "basePath": "${directory}",
+                    "maxDepth": 1,
+                    "ifFileName": {
+                      "glob": "${log_name}*.log.gz",
+                      "ifAny": {
+                        "ifLastModified": {
+                          "age": "30d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "loggers": {
+              "logger": [
+                {
+                  "name": "com.lucidworks.ambari",
+                  "level": "INFO"
+                },
+                {
+                  "name": "org.apache.zookeeper",
+                  "level": "WARN"
+                }
+              ],
+              "root": {
+                "level": "INFO",
+                "appender-ref": [
+                  {
+                    "ref": "file"
+                  }
+                ]
+              }
+            }
+          }
+        }
+        </value>
+        <value-attributes>
+            <type>content</type>
+        </value-attributes>
+    </property>
+</configuration>

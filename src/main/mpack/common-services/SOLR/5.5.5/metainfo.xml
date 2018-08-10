@@ -32,7 +32,10 @@
                     <osFamily>any</osFamily>
                     <packages>
                         <package>
-                            <name>lucidworks-hdpsearch</name>
+                          <name>lsof</name>
+                        </package>
+                        <package>
+                          <name>lucidworks-hdpsearch</name>
                         </package>
                     </packages>
                 </osSpecific>
@@ -58,6 +61,7 @@
                 <config-type>example-collection</config-type>
                 <config-type>solr-security</config-type>
                 <config-type>solr-metrics</config-type>
+                <config-type>ams-env</config-type>
             </configuration-dependencies>
             <restartRequiredAfterChange>true</restartRequiredAfterChange>
 

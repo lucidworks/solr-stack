@@ -17,32 +17,12 @@
         <value>512m</value>
         <description>
             Sets the min (-Xms) and max (-Xmx) heap size for the
-            JVM, such as: -m 4g
+            JVM, such as: 4g
             results in: -Xms4g -Xmx4g; by default, this
             script sets the heap
             size to 512m
         </description>
         <display-name>Solr heap size for the JVM</display-name>
-    </property>
-
-    <property>
-        <name>solr_config_conf_dir</name>
-        <value>/etc/solr/conf</value>
-        <description>Solr conf directory</description>
-        <value-attributes>
-            <type>directory</type>
-        </value-attributes>
-        <display-name>Solr configuration directory</display-name>
-    </property>
-
-    <property>
-        <name>solr_config_data_dir</name>
-        <value>/etc/solr/data_dir</value>
-        <description>Solr data directory</description>
-        <value-attributes>
-            <type>directory</type>
-        </value-attributes>
-        <display-name>Solr server directory</display-name>
     </property>
 
     <property>
@@ -103,7 +83,7 @@
           <name>solr_stop_key</name>
           <value>solrrocks</value>
           <property-type>PASSWORD</property-type>
-          <description>Solr stop key</description>
+          <description>Solr stop key (password) that must be supplied in order to stop Solr.</description>
           <value-attributes>
             <type>password</type>
             <overridable>false</overridable>

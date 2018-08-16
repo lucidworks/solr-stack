@@ -5,8 +5,8 @@
     <property>
         <name>solr_hdfs_enable</name>
         <value>true</value>
-        <description>Enable support for Solr on HDFS</description>
-        <display-name>Enable support for Solr on HDFS</display-name>
+        <description>Enables storing Solr's indexes in HDFS.</description>
+        <display-name>Store Solr indexes in HDFS</display-name>
         <value-attributes>
             <type>boolean</type>
             <overridable>false</overridable>
@@ -16,14 +16,17 @@
     <property>
         <name>solr_hdfs_directory</name>
         <value>/solr</value>
-        <description>HDFS directory for Solr indexes</description>
+        <description>The HDFS path where Solr indexes will be stored.</description>
         <display-name>HDFS directory for Solr indexes</display-name>
     </property>
 
     <property>
         <name>solr_hdfs_delete_write_lock_files</name>
         <value>false</value>
-        <description>Delete write.lock files on HDFS</description>
+        <description>Solr locks indexes against multiple writes. In some cases, restarting Solr will leave lock
+           files behind, which prevent successful startup. This option automatically checks for and removes any
+           lock files found in any collection on any node every time Solr starts.
+        </description>
         <display-name>Delete write.lock files on HDFS</display-name>
         <value-attributes>
             <type>boolean</type>

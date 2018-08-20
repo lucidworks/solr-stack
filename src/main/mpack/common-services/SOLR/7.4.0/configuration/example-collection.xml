@@ -5,7 +5,7 @@
     <property>
         <name>solr_collection_sample_create</name>
         <value>true</value>
-        <description>True to create a sample collection when Solr is deployed</description>
+        <description>True to create a sample collection when Solr is deployed.</description>
         <display-name>Create sample collection</display-name>
         <value-attributes>
             <type>boolean</type>
@@ -16,25 +16,25 @@
     <property>
         <name>solr_collection_sample_name</name>
         <value>collection1</value>
-        <description>Solr sample collection name. Mandatory</description>
+        <description>Solr sample collection name. Mandatory.</description>
         <display-name>Sample collection name</display-name>
     </property>
 
     <property>
         <name>solr_collection_sample_config_directory</name>
         <value>_default</value>
-        <description>Solr sample collection configurations directory. Mandatory
+        <description>Solr configuration set for the sample collection, which must be a directory
+            that contains at least solrconfig.xml and a schema. Mandatory.
             This directory path is relative to /opt/lucidworks-hadoop/solr/server/solr/configsets.
-            It must contain at least solrconfig.xml and schema.xml
         </description>
-        <display-name>Solr configuration directory</display-name>
+        <display-name>Solr configset</display-name>
     </property>
 
     <property>
         <name>solr_collection_sample_shards</name>
         <value>2</value>
-        <description>Number of Solr shards, for details refer to
-            (https://cwiki.apache.org/confluence/display/solr/Shards+and+Indexing+Data+in+SolrCloud)
+        <description>Number of shards (logical partitions of the collection) to create. For details refer to
+            (https://lucene.apache.org/solr/guide/7_4/shards-and-indexing-data-in-solrcloud.html)
         </description>
         <value-attributes>
             <type>int</type>
@@ -45,8 +45,8 @@
     <property>
         <name>solr_collection_sample_replicas</name>
         <value>1</value>
-        <description>Number of Solr replicas, for details refer to
-            (https://cwiki.apache.org/confluence/display/solr/NRT%2C+Replication%2C+and+Disaster+Recovery+with+SolrCloud)
+        <description>Number of Solr replicas (physical copies of shards) to create. For details refer to
+           (https://lucene.apache.org/solr/guide/7_4/shards-and-indexing-data-in-solrcloud.html)
         </description>
         <value-attributes>
             <type>int</type>

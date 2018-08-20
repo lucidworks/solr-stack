@@ -47,7 +47,7 @@ def exists_collection(collection_name):
     import params
 
     if not params.solr_cloud_mode:
-        if os.path.isdir(format("{solr_config_data_dir}/{collection_name}")):
+        if os.path.isdir(format("{solr_config_home_dir}/{collection_name}")):
             return True
         return False
 

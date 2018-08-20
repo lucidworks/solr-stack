@@ -7,7 +7,7 @@
         <name>solr_enable_metrics</name>
         <value>false</value>
         <description>Enable Solr Metrics (Requires Ambari Metrics)</description>
-        <display-name>Enable Solr Metrics</display-name>
+        <display-name>Enable Solr metrics</display-name>
         <value-attributes>
             <type>boolean</type>
         </value-attributes>
@@ -137,6 +137,7 @@
         <value-attributes>
             <type>content</type>
         </value-attributes>
+        <display-name>Solr Metrics properties</display-name>
     </property>
 
     <property>
@@ -215,5 +216,6 @@
         <value-attributes>
             <type>content</type>
         </value-attributes>
+        <display-name>Solr Metrics log4j</display-name>
     </property>
 </configuration>

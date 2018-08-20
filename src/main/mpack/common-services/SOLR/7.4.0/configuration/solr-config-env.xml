@@ -6,7 +6,7 @@
     <property>
         <name>solr_stop_wait</name>
         <value>180</value>
-        <description>This controls the number of seconds that the solr script will wait for Solr to stop gracefully
+        <description>The number of seconds that the Solr script will wait for Solr to stop gracefully
             or Solr to start. If the graceful stop fails, the script will forcibly stop Solr. If the start fails,
             the script will give up waiting and display the last few lines of the logfile.
         </description>
@@ -130,7 +130,7 @@
 
             # Path to a directory for Solr to store cores and their data. By default, Solr will use server/solr
             # If solr.xml is not stored in ZooKeeper, this directory needs to contain solr.xml
-            SOLR_HOME={{solr_config_data_dir}}
+            SOLR_HOME={{solr_config_home_dir}}
 
             # Path to a directory that Solr will use as root for data folders for each core.
             # If not set, defaults to $instance_dir/data. Overridable per core through 'dataDir' core property

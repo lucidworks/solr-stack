@@ -23,6 +23,27 @@
             size to 512m
         </description>
         <display-name>Solr heap size for the JVM</display-name>
+      </property>
+
+    <property>
+        <name>solr_config_conf_dir</name>
+        <value>/etc/solr/conf</value>
+        <description>Holds miscellaneous configuration files for Solr and other related processes. (e.g. logging properties, jaas files)</description>
+        <value-attributes>
+            <type>directory</type>
+        </value-attributes>
+        <display-name>Solr configuration directory</display-name>
+    </property>
+
+
+    <property>
+        <name>solr_config_home_dir</name>
+        <value>/etc/solr/home</value>
+        <description>Solr's "home" directory; used to store configuration for the Solr instance and metadata about the cores it hosts.</description>
+        <value-attributes>
+            <type>directory</type>
+        </value-attributes>
+        <display-name>Solr home directory</display-name>
     </property>
 
     <property>
@@ -203,7 +224,7 @@
 
             # Path to a directory for Solr to store cores and their data. By default, Solr will use server/solr
             # If solr.xml is not stored in ZooKeeper, this directory needs to contain solr.xml
-            SOLR_HOME={{solr_config_data_dir}}
+            SOLR_HOME={{solr_config_home_dir}}
 
             # Solr provides a default Log4J configuration properties file in server/resources
             # however, you may want to customize the log settings and file appender location

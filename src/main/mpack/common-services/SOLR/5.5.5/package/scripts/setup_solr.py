@@ -13,7 +13,7 @@ def setup_solr():
                 params.solr_config_service_log_dir,
                 params.solr_config_pid_dir,
                 params.solr_config_conf_dir,
-                params.solr_config_data_dir
+                params.solr_config_home_dir
             ],
             mode=0755,
             cd_access='a',
@@ -40,7 +40,7 @@ def setup_solr():
     )
 
     File(
-            format("{solr_config_data_dir}/solr.xml"),
+            format("{solr_config_home_dir}/solr.xml"),
             content=Template("solr.xml.j2"),
             owner=params.solr_config_user
     )

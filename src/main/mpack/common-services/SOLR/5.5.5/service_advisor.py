@@ -100,7 +100,7 @@ class SOLR555ServiceAdvisor(service_advisor.ServiceAdvisor):
             self.validator_entry('solr_config_port', self.is_number, self.solr_config_properties),
             self.validator_entry('solr_config_memory', self.is_memory_format, self.solr_config_properties),
             self.validator_entry('solr_config_conf_dir', self.is_absolute_path, self.solr_config_properties),
-            self.validator_entry('solr_config_data_dir', self.is_absolute_path, self.solr_config_properties),
+            self.validator_entry('solr_config_home_dir', self.is_absolute_path, self.solr_config_properties),
             self.validator_entry('solr_config_pid_dir', self.is_absolute_path, self.solr_config_properties),
             self.validator_entry('solr_config_log_dir', self.is_absolute_path, self.solr_config_properties),
             self.validator_entry('solr_config_service_log_dir', self.is_absolute_path, self.solr_config_properties)
